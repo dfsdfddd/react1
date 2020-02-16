@@ -61,6 +61,7 @@ export default function RouteConfigExample() {
 // handle "sub"-routes by passing them in a `routes`
 // prop to the component it renders.
 function RouteWithSubRoutes(route) {
+  let { path, url } = useRouteMatch();
   console.log(route)
   return (
     <Route
