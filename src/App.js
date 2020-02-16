@@ -2,6 +2,15 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+
+// 测试路由组件
+
+import NestingExample from './components/redireactAuth';
+import AuthExample from './components/auth';
+import RouteConfigExample from './components/routeConfig';
+
+
+
 function App() {
   return (
     <div className="App">
@@ -19,6 +28,13 @@ function App() {
           Learn React
         </a>
       </header>
+      <div>
+        {<NestingExample/>}
+        <hr/>
+        {<AuthExample/>}
+        <hr/>
+        {<RouteConfigExample/>}
+      </div>
     </div>
   );
 }
