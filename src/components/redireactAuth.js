@@ -8,8 +8,24 @@ import {
   useRouteMatch
 } from "react-router-dom";
 
+import actions from '../store/action';
+import {connect} from 'react-redux';
 
-export default function NestingExample() {
+
+
+
+function NestingExample(params) {
+  console.log(params)
+  const {toggle,onToggle} = params
+  console.log(toggle)
+  console.log(onToggle)
+
+  function handleClick(e) {
+    e.preventDefault();
+    onToggle(!toggle.toggle)
+
+  }
+
   return (
     <Router>
       <div>
@@ -21,7 +37,11 @@ export default function NestingExample() {
             <Link to="/topics">Topics</Link>
           </li>
         </ul>
-
+          {toggle.toggle?<div>true</div>:<div>false</div>}
+        <hr />
+        <button onClick={handleClick}>
+          Click me
+        </button>
         <hr />
 
         <Switch>
@@ -97,3 +117,13 @@ function Topic() {
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  toggle: state.toggle
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  onToggle: (toggle) => dispatch(actions.onToggle(toggle)),
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(NestingExample)
