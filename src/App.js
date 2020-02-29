@@ -2,6 +2,8 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import {Button} from 'antd';
+// import Button from 'antd/es/button';
 
 // 测试路由组件
 
@@ -22,6 +24,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
+        <Button type="primary">Button</Button>
         <a
           className="App-link"
           href="https://reactjs.org"
