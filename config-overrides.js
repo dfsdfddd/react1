@@ -18,7 +18,7 @@ module.exports = override(
   addLessLoader({
     javascriptEnabled: true,
     modifyVars: { 
-      '@primary-color': 'red'
+      '@primary-color': '#87CEFA'// 主题颜色浅蓝色
     },
   }),
 );
