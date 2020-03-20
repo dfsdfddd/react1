@@ -1,0 +1,54 @@
+export default {
+  // 菜单路由配置
+  menus:[
+    // {path:'',name:'',icon:'',component:'',children:[],redirect:''}, demolist
+    {path:'/home/dashboard/index',name:'首页',icon:'dashboard',component:'Dashboard'},
+    {
+      path:'/home/ui',
+      name:'UI',
+      icon:'ui',
+      children:[
+        {path:'/home/ui/buttons',name:'按钮',component:'Buttons'},
+        {path:'/home/ui/icons',name:'图标',component:'Icons'},
+        {path:'/home/ui/loading',name:'加载中',component:'Loading'},
+        {path:'/home/ui/modals',name:'对话框',component:'Modals'},
+      ]
+    },
+    {
+      path:'/home/animation',
+      name:'动画',
+      icon:'animation',
+      children:[
+        {path:'/home/animation/baseAnimations',name:'基础动画',component:'BaseAnimations'},
+        {path:'/home/animation/exampleAnimations',name:'动画案例',component:'ExampleAnimations'}
+      ]
+    },
+    {
+      path:'/home/table',
+      name:'动画',
+      icon:'table',
+      children:[
+        {path:'/home/table/baseTables',name:'基础表格',component:'BaseTables'},
+        {path:'/home/table/highTables',name:'高级表格',component:'HighTables'}
+      ]
+    },
+    {
+      path:'/home/message',
+      name:'消息',
+      icon:'message',
+      children:[
+        {path:'/home/message/message1',icon:'message',name:'基础表格',component:'BaseTables',
+        children:[
+          {path:'/home/message/message2',name:'基础表格',component:'Message2'},
+          {path:'/home/message/message3',name:'高级表格',component:'Message3'}
+        ]},
+        {path:'/home/message/message4',name:'高级表格',component:'HighTables',children:[
+          {path:'/home/message/message5',name:'基础表格',component:'Message5'},
+          {path:'/home/message/message6',name:'高级表格',component:'Message6'}
+        ]}
+      ]
+    }
+  ],
+  // 非菜单路由配置
+  others:{}
+}

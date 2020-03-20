@@ -1,5 +1,7 @@
 import React,{ Component } from "react";
 import {Layout,Menu} from 'antd';
+import SiderCustom from '../components/SiderCustom';
+
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -25,7 +27,12 @@ class Home extends Component{
   render(){
     return(
       <Layout>
-        <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
+        {/* <Sider style={{
+        overflow: 'auto',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+      }} trigger={null} collapsible collapsed={this.state.collapsed}>
           <div className="logo" />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
             <Menu.Item key="1">
@@ -41,8 +48,10 @@ class Home extends Component{
               <span>nav 3</span>
             </Menu.Item>
           </Menu>
-        </Sider>
-        <Layout id="layout-trigger" className="site-layout">
+        </Sider> */}
+        <SiderCustom collapsed={this.state.collapsed
+        }></SiderCustom>
+        <Layout id="layout-trigger" className="site-layout" style={{ marginLeft: this.state.collapsed?80:200 }}>
           <Header className="site-layout-background" style={{ padding: 0 }}>
             {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
               className: 'trigger',
