@@ -1,4 +1,5 @@
 import React,{Component} from 'react';
+import {Link} from 'react-router-dom';
 import {
   UserOutlined,
   VideoCameraOutlined,
@@ -8,12 +9,34 @@ import {Layout,Menu} from 'antd';
 import {withRouter} from 'react-router-dom';
 import routes from '../router/config';
 const {Sider} = Layout;
-const {SubMenu} = Menu
+const {SubMenu,Item} = Menu;
+
 
 
 
 class SiderCustom extends Component {
+  theList(menus){
+      let lists = menus.map((item,idx)=>{
+        if(item.children){
+           return <SubMenu key={item.path} title={item.name}>
+             {this.theList(item.children)}
+           </SubMenu>;
+        } else{
+           return <Item key={item.path}>
+             <Link to={item.path}>{item.name}</Link>
+            </Item>;
+        }
+      })
+
+      return lists
+  }
+
+  Url(){
+    return <div>这个是文字</div>
+  }
    render(){
+     const {menus} = routes
+    
      return(
       <Sider style={{
         overflow: 'auto',
@@ -23,24 +46,7 @@ class SiderCustom extends Component {
       }} trigger={null} collapsible collapsed={this.props.collapsed}>
           <div className="logo" />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-            <Menu.Item key="1">
-              <UserOutlined />
-              <span>nav 1</span>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <VideoCameraOutlined />
-              <span>nav 2</span>
-            </Menu.Item>
-            <Menu.Item key="3">
-              <UploadOutlined />
-              <span>nav 3</span>
-            </Menu.Item>
-            <SubMenu key="4" title={'123123'}>
-              
-              <SubMenu key="5" title={'123123'}>
-                <Menu.Item key="6">Option 1</Menu.Item>
-              </SubMenu>
-            </SubMenu>
+          {this.theList(menus)}
           </Menu>
         </Sider>
      )

@@ -25,7 +25,7 @@ export default {
     },
     {
       path:'/home/table',
-      name:'动画',
+      name:'表格',
       icon:'table',
       children:[
         {path:'/home/table/baseTables',name:'基础表格',component:'BaseTables'},
@@ -37,12 +37,12 @@ export default {
       name:'消息',
       icon:'message',
       children:[
-        {path:'/home/message/message1',icon:'message',name:'基础表格',component:'BaseTables',
+        {path:'/home/message/message1',icon:'message',name:'基础表格',
         children:[
           {path:'/home/message/message2',name:'基础表格',component:'Message2'},
           {path:'/home/message/message3',name:'高级表格',component:'Message3'}
         ]},
-        {path:'/home/message/message4',name:'高级表格',component:'HighTables',children:[
+        {path:'/home/message/message4',name:'高级表格',children:[
           {path:'/home/message/message5',name:'基础表格',component:'Message5'},
           {path:'/home/message/message6',name:'高级表格',component:'Message6'}
         ]}

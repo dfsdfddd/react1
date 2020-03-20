@@ -1,6 +1,10 @@
 import React,{ Component } from "react";
 import {Layout,Menu} from 'antd';
 import SiderCustom from '../components/SiderCustom';
+import Buttons from './Buttons';
+import Dashboard from './Dashboard';
+
+import RoutePage from '../components/RoutePage';
 
 import {
   MenuUnfoldOutlined,
@@ -10,6 +14,7 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 const { Header, Sider, Content } = Layout;
+
 
 
 
@@ -27,28 +32,6 @@ class Home extends Component{
   render(){
     return(
       <Layout>
-        {/* <Sider style={{
-        overflow: 'auto',
-        height: '100vh',
-        position: 'fixed',
-        left: 0,
-      }} trigger={null} collapsible collapsed={this.state.collapsed}>
-          <div className="logo" />
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-            <Menu.Item key="1">
-              <UserOutlined />
-              <span>nav 1</span>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <VideoCameraOutlined />
-              <span>nav 2</span>
-            </Menu.Item>
-            <Menu.Item key="3">
-              <UploadOutlined />
-              <span>nav 3</span>
-            </Menu.Item>
-          </Menu>
-        </Sider> */}
         <SiderCustom collapsed={this.state.collapsed
         }></SiderCustom>
         <Layout id="layout-trigger" className="site-layout" style={{ marginLeft: this.state.collapsed?80:200 }}>
@@ -66,7 +49,7 @@ class Home extends Component{
               minHeight: 280,
             }}
           >
-            Content
+            <RoutePage/>
             <div style={{height:'1000px'}}></div>
           </Content>
         </Layout>
