@@ -1,5 +1,5 @@
-import React,{Component} from 'react';
-import {Link} from 'react-router-dom';
+import React,{Component,} from 'react';
+import {Link,useLocation } from 'react-router-dom';
 import {
   UserOutlined,
   VideoCameraOutlined,
@@ -15,6 +15,24 @@ const {SubMenu,Item} = Menu;
 
 
 class SiderCustom extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {activeLink: props.location.pathname};
+  }
+  componentDidMount(){
+    const {pathname} = this.props.location
+     this.setState({
+      activeLink:pathname
+     })
+     const {history} = this.props
+     history.listen((event)=>{
+       const {pathname} = event
+      this.setState({
+        activeLink:pathname
+      })
+     })
+
+  }
   theList(menus){
       let lists = menus.map((item,idx)=>{
         if(item.children){
@@ -36,7 +54,9 @@ class SiderCustom extends Component {
   }
    render(){
      const {menus} = routes
-    
+     const {pathname} = this.props.location
+     const activeLink = [this.state.activeLink]
+     
      return(
       <Sider style={{
         overflow: 'auto',
@@ -45,7 +65,8 @@ class SiderCustom extends Component {
         left: 0,
       }} trigger={null} collapsible collapsed={this.props.collapsed}>
           <div className="logo" />
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+          {this.state.activeLink}
+          <Menu selectedKeys={activeLink} theme="dark" mode="inline" >
           {this.theList(menus)}
           </Menu>
         </Sider>
@@ -53,4 +74,5 @@ class SiderCustom extends Component {
   }
 }
 
-export default withRouter(SiderCustom) 
+export default withRouter(SiderCustom) // 这个可以看到路由信息
+// export default SiderCustom // 这个只能看到一个传过来的参数
