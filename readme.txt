@@ -20,3 +20,6 @@ this.state 之后并没有立即改变值，一般在render里面才是真的值
 this.setState({count: this.state.count + 1},()=>{
   console.log(this.state.count);//该是啥就是是啥
 }）);
+
+如果在construct 里面没有用 bind(this)
+在一个方法里面直接调用另外一个方法是掉不到的。详情可看login.js
