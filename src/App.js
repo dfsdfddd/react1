@@ -6,11 +6,12 @@ import { Button } from "antd";
 // import Button from 'antd/es/button';
 
 // 测试路由组件
-
 import NestingExample from "./components/redireactAuth";
 import AuthExample from "./components/auth";
 import RouteConfigExample from "./components/routeConfig";
 
+
+// redux
 import { Provider } from "react-redux";
 import store from "./store";
 import Page from './Page';

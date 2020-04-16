@@ -16,7 +16,7 @@
 在jsx 语法里面不能使用if else 一般用三目表达式
 
 学习3
-  this.state 之后并没有立即改变值，一般在render里面才是真的值，如果要获取真的值需要用到setstate里面的回调函数
-  this.setState({count: this.state.count + 1},()=>{
-    console.log(this.state.count);//该是啥就是是啥
-  }）);
+this.state 之后并没有立即改变值，一般在render里面才是真的值，如果要获取真的值需要用到setstate里面的回调函数
+this.setState({count: this.state.count + 1},()=>{
+  console.log(this.state.count);//该是啥就是是啥
+}）);

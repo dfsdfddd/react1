@@ -1,7 +1,7 @@
 import React,{Component,Fragment} from 'react';
 import {Form, Input,Tooltip,
   Cascader,
-  Select, Button, Checkbox,Row, Col,Card,Checkbox,AutoComplete, } from 'antd';
+  Select, Button, Checkbox,Row, Col,Card,AutoComplete, } from 'antd';
 
 
 class Icons extends Component{
