@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 export function passGuardInit(){
   var Ajax = ''
 	//Windows IE32

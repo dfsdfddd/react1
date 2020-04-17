@@ -21,3 +21,11 @@ export function getImg() {
     method: 'get'
   })
 }
+
+export function login(data) {
+  return request({
+    url: '/authority/login',
+    method: 'post',
+    params: data
+  })
+}
