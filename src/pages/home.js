@@ -49,7 +49,7 @@ class Home extends Component{
               minHeight: 280,
             }}
           >
-            <RoutePage/>
+            <RoutePage />
             <div style={{height:'1000px'}}></div>
           </Content>
         </Layout>

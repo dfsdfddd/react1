@@ -28,13 +28,13 @@ export function passGuardInit(){
   var PGEdit_Edge_VERSION = "1.0.0.1";
 
 	//生产license授权
-	var license = process.env.LICENSE;
-  var licenseMac = process.env.LICENSEMAC;
-	var urlPar = process.env.URLPAR;
+	// var license = process.env.LICENSE;
+  // var licenseMac = process.env.LICENSEMAC;
+	// var urlPar = process.env.URLPAR;
 	//测试license授权
-	// var license = "Y1IrMkV4cGkzcTJiVGRRT3NlbnhYU2hYRlR0ZEl0b3ROd3BqM092Zkw1Tm1KVy8vbWpHV0V4SG52b0JUdzJ5UmhzMGtRV3FOc2lra2FMVmdyeExtT2wrZHdKSVpXT3BjKzJWV09MTTVVNDhDT1h2WnAwTWtBU3hBaXJFcjAwRjV3RmxGYW9SckF6emNiaU5JL0J2ZW1COVVtdmNUdzlGeEx5Y1h0V25YSHBzPXsiaWQiOjAsInR5cGUiOiJ0ZXN0IiwicGxhdGZvcm0iOjQsIm5vdGJlZm9yZSI6IjIwMTkwMTE2Iiwibm90YWZ0ZXIiOiIyMDE5MDQxNiJ9";
-	// var licenseMac = "Wi8vL2pUMTlQYW95MWpGYk9HTlA0ZEtLaUJjQU94b2lJbk9rTjRjdUphWG54SHc0UHJWVUNsNFhkR1F2UGdKdTFIVTRMVnRZNnJCSkpuK1ZmRUI5WHd1THBvdDgyUUt1SWtkSmpYbktCOTVVQm84enhwekhjb0FCS3N5cStyNHhQV05ZNEw1T3dKRS8vSEVFTUh4VVhVbFJaTFVsenlTR1Y4KzkzWnRpL0U4PXsiaWQiOjAsInR5cGUiOiJ0ZXN0IiwicGxhdGZvcm0iOjgsIm5vdGJlZm9yZSI6IjIwMTkwMTE2Iiwibm90YWZ0ZXIiOiIyMDE5MDQxNiJ9";
-  // var urlPar = "aHR0cDovLzE5Mi4xNjguMS4xMTg6ODA4Ny9EZW1vWF9BTExfQUVTL2xvZ2luLmpzcA==";
+	var license = "YU81cHM3WDBoeWgzenYrbEZWbmJYR0lFVWFWUXJ3dGRYczB2WTBmSTRydkVwaEtHOGRQd3RQNWRiSmlnekxNd2NzbExudlZqRk9LRHNDTk5jNUtSRnlBeDRIQk11N0RCZmJBNXJPU2dLekNJczhnMFBVR3NsdjBlenZROTBXc1d5TXl6QUh6YkNhRjM1czJuK2FMZk5qRzgwdUJjeS9jZUJSZW1JZklnQUdVPXsiaWQiOjAsInR5cGUiOiJ0ZXN0IiwicGxhdGZvcm0iOjQsIm5vdGJlZm9yZSI6IjIwMjAwMjE1Iiwibm90YWZ0ZXIiOiIyMDIwMDUxNSJ9";
+	var licenseMac = "bHZHaThYRFNCZitiWkpYNXJKYjhpR0ZPd3A1Q016cUhZdTlydUpLa1I5RXovejZSdWhTZ0dUNVl6MWx0a3ptUTFleXJ2UWN1U0pKTnorRFRGdmo3by9QYTdwMmNITXJMZUdnQ3lBRnoycENtTk9abmx1VWVZR2UyUm1YRjlKTmdwellpRzNURkRpeURBbTNDUm8vN2N4bUVKam5KdCtBSVNINHViU082MmxjPXsiaWQiOjAsInR5cGUiOiJ0ZXN0IiwicGxhdGZvcm0iOjgsIm5vdGJlZm9yZSI6IjIwMjAwMjE1Iiwibm90YWZ0ZXIiOiIyMDIwMDUxNSJ9";
+  var urlPar = "aHR0cDovLzE5Mi4xNjguMS4xMTg6ODA4Ny9EZW1vWF9BTExfQUVTL2xvZ2luLmpzcA==";
 	//设置是否升级 0:可选升级;1:强制升级
 	var PGEdit_Update = "0",installText = "请点此安装控件",upText = "请点此升级控件",logFlag = true;//日志开关
 	//Windows & Mac OS 非插件下用到的一些变量

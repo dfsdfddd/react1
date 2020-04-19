@@ -1,14 +1,80 @@
 import React,{Component,Fragment} from 'react';
-  import { Table,Form, Input, Button, Checkbox,Row, Col,Card } from 'antd';
+import { Table,Form, Input, Button, Checkbox,Row, Col,Card,message,Select } from 'antd';
+import { validateUsercode, queryUsers, updateUser,
+  batchForbid, addUser, userRoleDetail,
+  userDelete, delegateRole, reSendEmail,
+  updatePassWord, oprateDownUser,queryRoleList } from '../api/oporate'
+//需要的接口
+
+const {Option} = Select
 
 class Buttons extends Component{
   state={
+    pageSize:20,
+    pageNum:1,
     dataList:[],
-    pageSize:2,
-    pageNum:1
+    total:0,
+    form:{
+      usercode:'',
+      username:'',
+      rolename:'',
+      state:''
+    }
   }
   componentDidMount(){
-    this.getData()
+    this._queryRoleList()
+  }
+  _queryRoleList = ()=> {
+    queryRoleList().then(result => {
+      if (result.status === 200) {
+        this.optionRole = result.data
+      } else {
+        message.error('系统错误')
+      }
+    })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+  
+  // 分页查询
+  _queryUsers(type) {
+    if (type === '1') {
+      this.setState({
+        pageSize:20,
+        pageNum:1,
+        total:0
+      })
+    }
+    setTimeout(() => {
+      const data = {
+        orgNoBean:{orgNo5: "0000100000", orgNo1: "1", orgNo2: "1", orgNo3: "1", orgNo4: "1"},
+        usercode: this.state.form.usercode,
+        username: this.state.form.username,
+        rolename: this.state.form.rolename,
+        state: this.state.form.state,
+        pageSize: this.state.pageSize,
+        pageNum: this.state.pageNum
+      }
+      console.log(data)
+      queryUsers(data)
+        .then(result => {
+          const res = result.data
+          if (res.code === 200) {
+            console.log(res)
+            this.setState({
+              dataList:res.data.data,
+              total:res.data.maxRowCount
+            })
+          } else {
+            message.error(res.message)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }, 0);
+    
   }
   getData(){
     const list = [{
@@ -45,6 +111,7 @@ class Buttons extends Component{
     }, 2000);
   }
   _searchBar(){
+    // 定义布局样式
     const layout = {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
@@ -52,69 +119,108 @@ class Buttons extends Component{
     const tailLayout = {
       wrapperCol: { offset: 8, span: 16 },
     };
-
+    // select 事件
+    function onChange(value) {
+      console.log(`selected ${value}`);
+    }
+    
+    function onSearch(val) {
+      console.log('search:', val);
+    }
+    // 表单提交完成成功
     const onFinish = values => {
       console.log('Success:', values);
-      setTimeout(() => {
-        this.setState({
-          dataList: {
-            list:[{
-              key: '1',
-              name: '胡彦斌',
-              age: 32,
-              address: '西湖区湖底公园1号',
-            },
-            {
-              key: '2',
-              name: '胡彦祖',
-              age: 42,
-              address: '西湖区湖底公园1号',
-            }],
-            total:2
-          }
-        })
-      }, 2000);
+      this.setState({
+        form:{
+          ...this.state.form,
+          ...values
+        }
+      },()=>{
+        console.log(this.state.form)
+        this._queryUsers('1')
+      })
     };
-  
+    // 表单提交失败
     const onFinishFailed = errorInfo => {
       console.log('Failed:', errorInfo);
+      
     };
+    
+    const stateOption = {
+      '00': '正常',
+      '01': '冻结',
+      '02': '禁用',
+      '03': '注销'
+    }
     
     return (
       <Form
       {...layout}
       layout={'vertical'}
       name="basic"
-      initialValues={{ remember: true }}
+      initialValues={{ usercode:'',username:'', rolename:'', state:'',  }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
        <Row>
         <Col span={6}>
           <Form.Item
-          label="Username"
-          name="username"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+          label="登录用户名"
+          name="usercode"
         >
-          <Input />
+          <Input placeholder="请输入内容" />
         </Form.Item>
         </Col>
         <Col span={6}>
         <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            label="用户名称"
+            name="username"
           >
-            <Input.Password />
+            <Input placeholder="请输入内容" />
           </Form.Item>
         </Col>
         <Col span={6}>
-        <Form.Item style={{marginTop:40}} {...tailLayout} name="remember" valuePropName="checked">
-          <Checkbox>Remember me</Checkbox>
+        <Form.Item label="用户角色" name="rolename">
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="请选择"
+            optionFilterProp="children"
+            onChange={onChange}
+            onSearch={onSearch}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {this.optionRole && this.optionRole.map((item,idx)=>(<Option key={idx} value={item.rolename}>{item.rolename}</Option>))}
+            <Option value="jack">Jack</Option>
+            <Option value="lucy">Lucy</Option>
+            <Option value="tom">Tom</Option>
+          </Select>
         </Form.Item>
         </Col>
         <Col span={6}>
-        <Form.Item {...tailLayout} style={{marginTop:40}}>
+        <Form.Item label="用户状态" name="state">
+        <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="请选择"
+            optionFilterProp="children"
+            onChange={onChange}
+            onSearch={onSearch}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {Object.keys(stateOption).map((key)=>(<Option key={key} value={key}>{stateOption[key]}</Option>))}
+          </Select>
+        </Form.Item>
+        </Col>
+        
+      </Row>
+      <Row>
+      <Col span={6}>
+        <Form.Item>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
@@ -126,48 +232,67 @@ class Buttons extends Component{
   }
   changePage = (page) =>{
     console.log(page)
-    // this.setState({
-    //   current: page,
-    // }, () => {
-    //   let param = JSON.parse(JSON.stringify(this.state.param))
-    //   param = {
-    //     ...param,
-    //     pageNum: this.state.current,
-    //     pageSize: 10,
-    //   }
-    //   this.getActivityRestDetailList(param)
-    // })
+    this.setState({
+      pageNum:page,
+    },()=>{
+      this._queryUsers()
+    })
   }
   render(){
-    const dataSource = this.state.dataList.list
+    const dataSource = this.state.dataList
     
     const columns = [
       {
-        title: '姓名',
-        dataIndex: 'name',
-        key: 'name',
+        title: '用户名',
+        dataIndex: 'usercode',
+        key: 'usercode',
       },
       {
-        title: '年龄',
-        dataIndex: 'age',
-        key: 'age',
+        title: '用户名称',
+        dataIndex: 'username',
+        key: 'username',
       },
       {
-        title: '住址',
-        dataIndex: 'address',
-        key: 'address',
+        title: '用户角色',
+        dataIndex: 'rolename',
+        key: 'rolename',
+      },
+      {
+        title: '所属内部机构',
+        dataIndex: 'orgNm',
+        key: 'orgNm',
+      },
+      {
+        title: '用户状态',
+        dataIndex: 'state',
+        key: 'state',
+      },
+      {
+        title: '操作',
+        key: 'action',
+        dataIndex: 'action',
+        render: (text, record) => (
+          <span>
+            <a style={{ marginRight: 16 }}>重发邮件 {record.state}</a>
+            <a>赋角色</a>
+            <a>修改</a>
+            <a>重置密码</a>
+            <a>注销</a>
+          </span>
+        ),
       },
     ];
     return (
       <Fragment>
-        <Card title="查询条件" style={{marginBottom:20}}>
+        <Card style={{marginBottom:20}}>
         {this._searchBar()}
        </Card>
-       <Card title="列表" >
-        <Table bordered={true} dataSource={dataSource} columns={columns}
+       <Card >
+        <Table bordered={true} dataSource={dataSource} columns={columns} rowKey={(record, index) => index}
         pagination = {{
-          simple:true,
-          total:this.state.dataList.total,
+          showTotal:total => `Total ${total} items`,
+          showQuickJumper:true,
+          total:this.state.total,
           onChange:this.changePage,
           current:this.state.pageNum,
           pageSize:this.state.pageSize

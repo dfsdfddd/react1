@@ -10,7 +10,11 @@ export default () => (
   <Fragment>
       <Router>
           <Switch>
-              <Route exact path="/" render={()=><Redirect to='/home/dashboard/index' push />} />
+              <Route exact path="/" render={(props)=>{
+                console.log(props)
+                const {userMap} = props.location.query
+                return (<Redirect {...props} to={{pathname:'/home/dashboard/index',state:{userMap:userMap?userMap:''}}} push />)
+              }} />
               <Route path="/home" component={Home} />
               <Route path="/404" component={NoFind} />
               <Route path="/login" component={Login} />

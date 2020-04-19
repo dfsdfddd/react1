@@ -10,14 +10,13 @@ const {menus} = routeConfig;
 class RoutePage extends Component {
 
   showRoute(menuss){
-    // console.log(allComponent)
     const routers = menuss.map((item ,idx)=>{
       if(!item.children&&item.component){
-      console.log(item)
+      // console.log(item)
        return  <Route key={item.path} exact path={item.path} render={(props)=>{
          //  这个render里面可以加很多的权限判断 例如是否登录 是否有权限访问这个路由
          const Components = allComponent[item.component] 
-          return <Components/>
+          return <Components {...props} />
         }}></Route>
       } else {
         return this.showRoute(item.children)
