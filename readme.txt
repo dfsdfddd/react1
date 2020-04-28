@@ -41,3 +41,6 @@ this.setState({count: this.state.count + 1},()=>{
 
 记录2 组件之间当路由跳转  在 this.props.location.push/redirect({pathname:'',state:{},query:{}})
       一般在 route  render(props)的时候把 props 传到组件里面去  这个每个组件都会带有路由都信息
+
+
+表单优化 https://www.jianshu.com/p/fc59cb61f7cc
