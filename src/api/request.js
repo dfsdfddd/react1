@@ -26,8 +26,11 @@ instance.interceptors.request.use(config => {
 instance.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
-  // 请求错误时做些事
-  if (error.message.indexOf('timeout') >= 0) {
+  if (!error.response) {
+    message.error('请求超时');
+  }else if (error.response.status) {
+    message.error("错误码:"+error.response.status);
+  }else{
     message.error('请求超时');
   }
   return Promise.reject(error)
