@@ -1,18 +1,10 @@
-/*
- * @Author: your name
- * @Date: 2020-03-19 13:57:35
- * @LastEditTime: 2020-07-02 16:51:24
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /react1/src/components/SiderCustom.js
- */ 
 import React,{Component,} from 'react';
-import {Link,useLocation } from 'react-router-dom';
-import {
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
+import {Link } from 'react-router-dom';
+// import {
+//   UserOutlined,
+//   VideoCameraOutlined,
+//   UploadOutlined,
+// } from '@ant-design/icons';
 import {Layout,Menu} from 'antd';
 import {withRouter} from 'react-router-dom'; // 可以把路由信息关联到props
 import routes from '../router/config';
@@ -34,6 +26,7 @@ class SiderCustom extends Component {
      })
      const {history} = this.props
      history.listen((event)=>{
+      console.log(event)
        const {pathname} = event
       this.setState({
         activeLink:pathname
@@ -62,7 +55,6 @@ class SiderCustom extends Component {
   }
    render(){
      const {menus} = routes
-     const {pathname} = this.props.location
      const activeLink = [this.state.activeLink]
      
      return(

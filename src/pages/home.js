@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-04-28 14:09:15
- * @LastEditTime: 2020-07-02 15:57:44
- * @LastEditors: your name
+ * @LastEditTime: 2020-07-02 17:03:31
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /react1/src/pages/home.js
  */ 
@@ -15,11 +15,8 @@ import RoutePage from '../components/RoutePage';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
 } from '@ant-design/icons';
-const { Header, Sider, Content } = Layout;
+const { Header, Content } = Layout;
 
 
 

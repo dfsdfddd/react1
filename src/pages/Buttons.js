@@ -1,9 +1,6 @@
 import React,{Component,Fragment} from 'react';
-import { Table,Form, Input, Button, Checkbox,Row, Col,Card,message,Select } from 'antd';
-import { validateUsercode, queryUsers, updateUser,
-  batchForbid, addUser, userRoleDetail,
-  userDelete, delegateRole, reSendEmail,
-  updatePassWord, oprateDownUser,queryRoleList } from '../api/oporate'
+import { Table,Form, Input, Button,Row, Col,Card,message,Select } from 'antd';
+import {  queryUsers,queryRoleList } from '../api/oporate'
 //需要的接口
 
 const {Option} = Select
@@ -116,9 +113,9 @@ class Buttons extends Component{
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
     };
-    const tailLayout = {
-      wrapperCol: { offset: 8, span: 16 },
-    };
+    // const tailLayout = {
+    //   wrapperCol: { offset: 8, span: 16 },
+    // };
     // select 事件
     function onChange(value) {
       console.log(`selected ${value}`);
@@ -273,11 +270,11 @@ class Buttons extends Component{
         dataIndex: 'action',
         render: (text, record) => (
           <span>
-            <a style={{ marginRight: 16 }}>重发邮件 {record.state}</a>
-            <a>赋角色</a>
-            <a>修改</a>
-            <a>重置密码</a>
-            <a>注销</a>
+            <a  href="/#" style={{ marginRight: 16 }}>重发邮件 {record.state}</a>
+            <a  href="/#">赋角色</a>
+            <a  href="/#">修改</a>
+            <a  href="/#">重置密码</a>
+            <a  href="/#">注销</a>
           </span>
         ),
       },

@@ -45,3 +45,17 @@ this.setState({count: this.state.count + 1},()=>{
 
 
 表单优化 https://www.jianshu.com/p/fc59cb61f7cc
+
+
+路由的事件监听
+const {history} = this.props
+  history.listen((event)=>{
+  console.log(event)
+    const {pathname} = event
+  this.setState({
+    activeLink:pathname
+  })
+})
+
+// a 标签报错，解决方案 href="/#"
+<a  href="/#">注销</a>
