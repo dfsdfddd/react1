@@ -1,14 +1,14 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
-import { Button } from "antd";
-// import Button from 'antd/es/button';
 
 // 测试路由组件
-import NestingExample from "./components/redireactAuth";
-import AuthExample from "./components/auth";
-import RouteConfigExample from "./components/routeConfig";
+// import logo from "./logo.svg";
+// import { Button } from "antd";
+// import NestingExample from "./components/redireactAuth";
+// import AuthExample from "./components/auth";
+// import RouteConfigExample from "./components/routeConfig";
+
 
 
 // redux
@@ -20,6 +20,7 @@ function App() {
   return (
     <Provider store={store}>
       <Page/>
+{/* // 测试路由组件 */}
       {/* <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />

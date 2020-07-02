@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-04-28 14:09:15
+ * @LastEditTime: 2020-07-02 16:49:45
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /react1/src/components/RoutePage.js
+ */ 
 import React,{Component} from 'react';
 import {Route,Switch} from 'react-router-dom';
 

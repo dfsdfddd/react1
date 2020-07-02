@@ -1,8 +1,14 @@
+/*
+ * @Author: your name
+ * @Date: 2020-04-28 14:09:15
+ * @LastEditTime: 2020-07-02 15:57:44
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /react1/src/pages/home.js
+ */ 
 import React,{ Component } from "react";
-import {Layout,Menu} from 'antd';
+import {Layout} from 'antd';
 import SiderCustom from '../components/SiderCustom';
-import Buttons from './Buttons';
-import Dashboard from './Dashboard';
 
 import RoutePage from '../components/RoutePage';
 

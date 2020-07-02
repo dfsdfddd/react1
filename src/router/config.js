@@ -8,7 +8,7 @@ export default {
       name:'UI',
       icon:'ui',
       children:[
-        {path:'/home/ui/buttons',name:'按钮',component:'Buttons'},
+        {path:'/home/ui/buttons',name:'用户查询',component:'Buttons'},
         {path:'/home/ui/icons',name:'图标',component:'Icons'},
         {path:'/home/ui/loading',name:'加载中',component:'Loading'},
         {path:'/home/ui/modals',name:'对话框',component:'Modals'},
