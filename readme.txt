@@ -59,3 +59,13 @@ const {history} = this.props
 
 // a 标签报错，解决方案 href="/#"
 <a  href="/#">注销</a>
+
+// 定义的属性必须放在 import之后 否者报错
+
+// 父子组件传参技巧 父组件把this 传到子组件
+// // https://www.jianshu.com/p/8a04823ab900  表单校验rules 方法
+// https://blog.csdn.net/nameisyaya/article/details/82189485 // 父子组件传值
+// https://www.cnblogs.com/cazj/p/11126625.html
+// 父子组件传值
+
+static 可以被子类继承 ， 不能被实例继承。https://blog.csdn.net/qdmoment/article/details/82496685?utm_source=blogkpcl5

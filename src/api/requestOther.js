@@ -2,7 +2,7 @@ import axios from 'axios'
 import { message } from 'antd';
 // import router from '../router'
 
-const baseUrl = "/api"
+const baseUrl = "http://10.213.50.13:8086"
 const token = sessionStorage.getItem('theToken')
 console.log('token',token)
 
@@ -31,6 +31,10 @@ instance.interceptors.response.use(function (response) {
   // 请求错误时做些事
   if (error.message.indexOf('timeout') >= 0) {
     message.error('请求超时');
+  }else if (error.response.status) {
+    message.error("错误码:"+error.response.status)
+  }else{
+    message.error("系统错误")
   }
   return Promise.reject(error)
 })

@@ -12,7 +12,7 @@ export default () => (
           <Switch>
               <Route exact path="/" render={(props)=>{
                 console.log(props)
-                const {userMap} = props.location.query
+                const {userMap} = props.location.query || {}
                 return (<Redirect {...props} to={{pathname:'/home/dashboard/index',state:{userMap:userMap?userMap:''}}} push />)
               }} />
               <Route path="/home" component={Home} />

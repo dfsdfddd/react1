@@ -1,126 +1,335 @@
-import React,{Component,Fragment} from 'react';
-import { Table,Form, Input, Button,Row, Col,Card,message,Select } from 'antd';
-import {  queryUsers,queryRoleList } from '../api/oporate'
+import React, { Component, Fragment } from 'react';
+import { Cascader, Table, Form, Input, Button, Row, Col, Card, message, Select, DatePicker, Modal } from 'antd';
+
+// https://www.jianshu.com/p/8a04823ab900  表单校验rules 方法
+// https://blog.csdn.net/nameisyaya/article/details/82189485 // 父子组件传值
+// https://www.cnblogs.com/cazj/p/11126625.html
+// 父子组件传值
+import {
+  uploadFile,
+  popupAdsAdd,
+  popupAdsDown,
+  getDataDicTionary,
+  popupAdsQuery,
+  popupAdsModify,
+  getOrgList
+} from "../api/advertManage.js";
 //需要的接口
 
-const {Option} = Select
+// 定义的属性必须放在 import之后 否者报错
+const { Option } = Select
+const { RangePicker } = DatePicker;
 
-class Buttons extends Component{
-  state={
-    pageSize:20,
-    pageNum:1,
-    dataList:[],
-    total:0,
-    form:{
-      usercode:'',
-      username:'',
-      rolename:'',
-      state:''
+class ModelAdd extends Component {
+  constructor(props) {
+    super(props)
+    this.formRef = React.createRef()
+    this.state = {
+      adsType: '',
+      actionType: '',
     }
   }
-  componentDidMount(){
-    this._queryRoleList()
+  componentDidMount() {
+    this._getOrgList()
   }
-  _queryRoleList = ()=> {
-    queryRoleList().then(result => {
-      if (result.status === 200) {
-        this.optionRole = result.data
+  _getOrgList() {
+    getOrgList().then((result) => {
+      const res = result.data
+      if (res.code !== 200) return message.warning(res.msg)
+      this.optionsList = res.data.orgList
+      this.defaultOrg = [res.data.orgNo]
+      console.log(this.optionsList)
+      // this.form.orgNo = [res.data.orgNo] // 设置默认机构号
+    }).catch((err) => {
+      console.log("查询机构报错：" + err)
+    });
+  }
+  onChange(value) {
+    console.log(value)
+  }
+  adsTypeChange = (value) => {
+    this.setState({
+      adsType: value
+    })
+  }
+  actionTypeChange = (value) => {
+    this.setState({
+      actionType: value
+    })
+  }
+  render() {
+    const { visible, onCancel, onCreate, self } = this.props
+    const layouts = {
+      labelCol: {
+        span: 8,
+      },
+      wrapperCol: {
+        span: 16,
+      },
+    };
+    return (
+      <Modal
+        visible={visible}
+        title="新增"
+        okText="确定"
+        cancelText="取消"
+        onCancel={onCancel}
+        onOk={() => {
+          this.formRef.current.validateFields().then(values => {
+            console.log(values)
+            // this.formRef.current.resetFields() // 清空表单
+            onCreate(values)
+          })
+        }}
+      >
+        <Form
+          ref={this.formRef}
+          layout={layouts}
+          name="form_in_model"
+          initialValues={{
+            adsName: "", // 广告名称
+            adsType: "", // 广告方式
+            imgPath: "",// 图片存放路径
+            imgClickUrl: "", //图片url
+            adsTitle: "", // 广告标题
+            adsContent: "", //广告内容
+            btnText: "", // 按钮文字
+            btnClickUrl: "", // 按钮链接
+            actionType: "", //弹窗对象
+            actionOrgNo: this.defaultOrg || [], // 机构号
+            actionOrgName: "",// 机构名称
+            actionStoragePath: "",//弹窗对象列表文件存放路径
+            actionFrequency: "", //弹窗频率
+            startDate: "", //开始时间
+            endDate: "", //结束时间
+            state: "00"
+          }}
+        >
+          <Form.Item name="adsName" label="广告名称" hasFeedback rules={[{
+            required: true,
+            message: '请输入广告名称'
+          }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item name="adsType" label="广告方式" hasFeedback rules={[{
+            required: true,
+            message: '请选择广告方式'
+          }]}
+          >
+            <Select onChange={this.adsTypeChange} style={{ width: 200 }} placeholder="请选择" allowClear={true}>
+              {self.state.adsTypeOption && Object.keys(self.state.adsTypeOption).map((key) => (<Option value={key} key={key}>{self.state.adsTypeOption[key]}</Option>))}
+            </Select>
+          </Form.Item>
+          {this.state.adsType === '01' ? (<Fragment>
+            <Form.Item name="imgClickUrl" label="图片链接" hasFeedback rules={[{
+              required: true,
+              message: '请输入图片链接'
+            }]}
+            >
+              <Input />
+            </Form.Item>
+          </Fragment>) : ''}
+          {this.state.adsType === '02' ? (<Fragment>
+            <Form.Item name="adsTitle" label="广告标题" hasFeedback rules={[{
+              required: true,
+              message: '请输入广告标题'
+            }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item name="adsContent" label="广告内容" hasFeedback rules={[{
+              required: true,
+              message: '请输入广告内容'
+            }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item name="btnText" label="按钮文字" hasFeedback rules={[{
+              required: true,
+              message: '请输入按钮文字'
+            }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item name="btnClickUrl" label="按钮链接" hasFeedback rules={[{
+              required: true,
+              message: '请输入按钮链接'
+            }]}
+            >
+              <Input.TextArea rows={4} />
+            </Form.Item>
+          </Fragment>) : ''}
+          <Form.Item onChange={this.actionTypeChange} name="actionType" label="弹窗对象" hasFeedback rules={[{
+            required: true,
+            message: '请选择弹窗对象'
+          }]}
+          >
+            <Select style={{ width: 200 }} placeholder='请选择' allowClear={true}>
+              {self.state.actionTypeOption && Object.keys(self.state.actionTypeOption).map(key => <Option value={key} key={key}>{self.state.actionTypeOption[key]}</Option>)}
+
+            </Select>
+          </Form.Item>
+          {this.state.actionType === '04'?(<Form.Item name="actionOrgNo" label="所属机构" hasFeedback rules={[{
+            required: true,
+            message: '请输入内容1'
+          }]}
+          >
+            <Cascader options={this.optionsList} onChange={this.onChange} fieldNames={{
+              value: 'orgNo',
+              label: 'orgNm',
+              children: 'lowList'
+            }} placeholder="请选择" changeOnSelect={true} showSearch={true} />
+          </Form.Item>):''}
+          
+          <Form.Item name="actionFrequency" label="弹窗频率" hasFeedback rules={[{
+            required: true,
+            message: '请选择弹窗频率'
+          }]}
+          >
+            <Select
+              style={{ width: 200 }}
+              placeholder="请选择"
+              allowClear={true}
+            >
+              {self.state.actionFrequencyOption && Object.keys(self.state.actionFrequencyOption).map(key => <Option value={key} key={key}>{self.state.actionFrequencyOption[key]}</Option>)}
+            </Select>
+          </Form.Item>
+          <Form.Item name="startDate" label="开始日期" hasFeedback rules={[{
+            required: true,
+            message: '请输入开始日期',
+          }, ({ getFieldValue }) => ({
+            validator(rule, value) {
+              if (value && getFieldValue('endDate') && value * 1 > getFieldValue('endDate') * 1) {
+                return Promise.reject('开始日期应小于结束日期')
+              }
+              return Promise.resolve()
+            }
+          })]}
+          >
+            <DatePicker format="YYYYMMDD" />
+          </Form.Item>
+          <Form.Item name="endDate" label="结束日期" hasFeedback rules={[{
+            required: true,
+            message: '请输入结束日期'
+          }, ({ getFieldValue }) => ({
+            validator(rule, value) {
+              console.log(value)
+              console.log(value*1)
+              if (value && getFieldValue("startDate") && value * 1 < getFieldValue('startDate') * 1) {
+                return Promise.reject('结束日期应大于开始日期')
+              }
+              return Promise.resolve()
+            }
+          })]}
+          >
+            <DatePicker format="YYYYMMDD" />
+          </Form.Item>
+          <Form.Item name="state" label="状态" hasFeedback rules={[{
+            required: true,
+            message: '请选择状态'
+          }]}
+          >
+            <Select
+              allowClear={true}
+              style={{ width: 200 }}
+              placeholder="请选择"
+            >
+              {self.state.stateOption && Object.keys(self.state.stateOption).map(key => <Option value={key} key={key}>{self.state.stateOption[key]}</Option>)}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+    )
+  }
+}
+
+class Buttons extends Component {
+  state = {
+    visible: false,
+    pageSize: 10,
+    pageNum: 1,
+    dataList: [],
+    total: 0,
+    form: {
+      adsId: "", // 广告编号
+      adsType: "", // 广告方式
+      adsName: "", // 广告名称
+      state: "" // 状态
+    },
+    actionFrequencyOption: {},
+    actionTypeOption: {},
+    adsTypeOption: {},
+    stateOption: {},
+  }
+  componentDidMount() {
+    this._getDataDicTionary()
+  }
+  _getDataDicTionary = () => {
+    getDataDicTionary({}).then(result => {
+      const res = result.data
+      if (res.status === 'success') {
+        this.setState({
+          actionFrequencyOption: res.data.actionFrequency,
+          actionTypeOption: res.data.actionType,
+          adsTypeOption: res.data.adsType,
+          stateOption: res.data.state,
+        })
+        this.actionFrequencyOption = res.data.actionFrequency
+        this.actionTypeOption = res.data.actionType
+        this.adsTypeOption = res.data.adsType
+        this.stateOption = res.data.state
       } else {
-        message.error('系统错误')
+        message.error(res.msg || res.message);
       }
     })
-      .catch(err => {
-        console.log(err)
-      })
   }
-  
+
   // 分页查询
-  _queryUsers(type) {
-    if (type === '1') {
-      this.setState({
-        pageSize:20,
-        pageNum:1,
-        total:0
-      })
+  _popupAdsQuery(type) {
+    if (type === "1") {
+      this.pageSize = 20;
+      this.pageNum = 1;
+      this.total = 0;
     }
-    setTimeout(() => {
-      const data = {
-        orgNoBean:{orgNo5: "0000100000", orgNo1: "1", orgNo2: "1", orgNo3: "1", orgNo4: "1"},
-        usercode: this.state.form.usercode,
-        username: this.state.form.username,
-        rolename: this.state.form.rolename,
-        state: this.state.form.state,
-        pageSize: this.state.pageSize,
-        pageNum: this.state.pageNum
+    const data = {
+      adsId: this.state.form.adsId,
+      adsType: this.state.form.adsType,
+      state: this.state.form.state,
+      adsName: this.state.form.adsName,
+      queryStartDate: this.valuedate1 || '',
+      queryEndDate: this.valuedate2 || '',
+      pageSize: this.pageSize,
+      pageNum: this.pageNum
+    };
+    this.loading = true;
+    popupAdsQuery(data).then(result => {
+      this.loading = false;
+      const res = result.data;
+      if (res.status === 'success') {
+        this.setState({
+          dataList: res.list,
+          total: res.data.total,
+        })
+      } else {
+        this.$message.error(res.msg);
       }
-      console.log(data)
-      queryUsers(data)
-        .then(result => {
-          const res = result.data
-          if (res.code === 200) {
-            console.log(res)
-            this.setState({
-              dataList:res.data.data,
-              total:res.data.maxRowCount
-            })
-          } else {
-            message.error(res.message)
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }, 0);
-    
+    })
   }
-  getData(){
-    const list = [{
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '3',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '4',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    }]
-    setTimeout(() => {
-      this.setState({
-        dataList: {
-          list,
-          total:4
-        }
-      })
-    }, 2000);
+  onCreate = values => {
+    console.log('Received values of form: ', values);
+    this.setState({ visible: false })
   }
-  _searchBar(){
+  _searchBar() {
     // 定义布局样式
     const layout = {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
     };
-    // const tailLayout = {
-    //   wrapperCol: { offset: 8, span: 16 },
-    // };
-    // select 事件
     function onChange(value) {
       console.log(`selected ${value}`);
     }
-    
+
     function onSearch(val) {
       console.log('search:', val);
     }
@@ -128,141 +337,162 @@ class Buttons extends Component{
     const onFinish = values => {
       console.log('Success:', values);
       this.setState({
-        form:{
+        form: {
           ...this.state.form,
           ...values
         }
-      },()=>{
+      }, () => {
         console.log(this.state.form)
-        this._queryUsers('1')
+        this._popupAdsQuery('1')
       })
     };
     // 表单提交失败
     const onFinishFailed = errorInfo => {
       console.log('Failed:', errorInfo);
-      
+
     };
-    
-    const stateOption = {
-      '00': '正常',
-      '01': '冻结',
-      '02': '禁用',
-      '03': '注销'
-    }
-    
+
+
     return (
       <Form
-      {...layout}
-      layout={'vertical'}
-      name="basic"
-      initialValues={{ usercode:'',username:'', rolename:'', state:'',  }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-    >
-       <Row>
-        <Col span={6}>
-          <Form.Item
-          label="登录用户名"
-          name="usercode"
-        >
-          <Input placeholder="请输入内容" />
-        </Form.Item>
-        </Col>
-        <Col span={6}>
-        <Form.Item
-            label="用户名称"
-            name="username"
-          >
-            <Input placeholder="请输入内容" />
-          </Form.Item>
-        </Col>
-        <Col span={6}>
-        <Form.Item label="用户角色" name="rolename">
-          <Select
-            showSearch
-            style={{ width: 200 }}
-            placeholder="请选择"
-            optionFilterProp="children"
-            onChange={onChange}
-            onSearch={onSearch}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            {this.optionRole && this.optionRole.map((item,idx)=>(<Option key={idx} value={item.rolename}>{item.rolename}</Option>))}
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-            <Option value="tom">Tom</Option>
-          </Select>
-        </Form.Item>
-        </Col>
-        <Col span={6}>
-        <Form.Item label="用户状态" name="state">
-        <Select
-            showSearch
-            style={{ width: 200 }}
-            placeholder="请选择"
-            optionFilterProp="children"
-            onChange={onChange}
-            onSearch={onSearch}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            {Object.keys(stateOption).map((key)=>(<Option key={key} value={key}>{stateOption[key]}</Option>))}
-          </Select>
-        </Form.Item>
-        </Col>
-        
-      </Row>
-      <Row>
-      <Col span={6}>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-        </Col>
-      </Row>
-    </Form>
+        className="adsClass"
+        {...layout}
+        layout={'vertical'}
+        name="basic"
+        initialValues={{ adsId: '', adsType: '', adsName: '', state: '', times: '' }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+      >
+        <Row>
+          <Col span={6}>
+            <Form.Item
+              label="广告编号"
+              name="adsId"
+            >
+              <Input placeholder="请输入内容" />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
+              label="广告方式"
+              name="adsType"
+            >
+              <Select
+                style={{ width: 200 }}
+                placeholder="请选择"
+                onChange={onChange}
+                allowClear={true}
+              >
+                {this.state.adsTypeOption && Object.keys(this.state.adsTypeOption).map((key) => (<Option value={key} key={key}>{this.state.adsTypeOption[key]}</Option>))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
+              label="广告名称"
+              name="adsName"
+            >
+              <Input placeholder="请输入内容" />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label="状态" name="state" >
+              <Select
+                showSearch
+                style={{ width: 200 }}
+                placeholder="请选择"
+                optionFilterProp="children"
+                onChange={onChange}
+                onSearch={onSearch}
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
+              >
+                {this.state.stateOption && Object.keys(this.state.stateOption).map((key) => (<Option key={key} value={key}>{this.state.stateOption[key]}</Option>))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="创建时间" name="times">
+              <RangePicker />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item style={{ marginTop: 35 }}>
+              <Button type="primary" htmlType="submit">查询</Button>
+              <Button onClick={() => { this.setState({ visible: true }) }} style={{ marginLeft: 20 }} type="primary">新增</Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
     )
   }
-  changePage = (page) =>{
+  changePage = (page) => {
     console.log(page)
     this.setState({
-      pageNum:page,
-    },()=>{
-      this._queryUsers()
+      pageNum: page,
+    }, () => {
+      this._popupAdsQuery()
     })
   }
-  render(){
+  render() {
     const dataSource = this.state.dataList
-    
+
     const columns = [
       {
-        title: '用户名',
-        dataIndex: 'usercode',
-        key: 'usercode',
+        title: '广告编号',
+        dataIndex: 'adsId',
+        key: 'adsId',
       },
       {
-        title: '用户名称',
-        dataIndex: 'username',
-        key: 'username',
+        title: '广告名称',
+        dataIndex: 'adsName',
+        key: 'adsName',
       },
       {
-        title: '用户角色',
-        dataIndex: 'rolename',
-        key: 'rolename',
+        title: '广告方式',
+        dataIndex: 'adsType',
+        key: 'adsType',
+        render: (text, record) => (
+          <span>{this.adsTypeOption[record.adsType] || ''}</span>
+        )
       },
       {
-        title: '所属内部机构',
-        dataIndex: 'orgNm',
-        key: 'orgNm',
+        title: '弹窗对象',
+        dataIndex: 'actionType',
+        key: 'actionType',
+        render: (text, record) => (
+          <span>{this.state.actionTypeOption[record.actionType] || ''}</span>
+        )
       },
       {
-        title: '用户状态',
+        title: '对象列表',
+        dataIndex: 'actionStoragePath',
+        key: 'actionStoragePath',
+        render: (text, record) => (
+          record.actionStoragePath ? <a style={{ color: '#409EFF', textDecoration: "underline" }} href={popupAdsDown(record.actionStoragePath)} target="_blank">下载</a> : ''
+        )
+      },
+      {
+        title: '弹窗频率',
+        dataIndex: 'actionFrequency',
+        key: 'actionFrequency',
+        render: (text, record) => (
+          <span>{this.state.actionFrequencyOption[record.actionFrequency] || ''}</span>
+        )
+      },
+      {
+        title: '状态',
         dataIndex: 'state',
         key: 'state',
+        render: (text, record) => (
+          <span>{this.state.stateOption[text] || ''}</span>
+        )
+      },
+      {
+        title: '开始日期',
+        dataIndex: 'startDate',
+        key: 'startDate',
       },
       {
         title: '操作',
@@ -270,34 +500,37 @@ class Buttons extends Component{
         dataIndex: 'action',
         render: (text, record) => (
           <span>
-            <a  href="/#" style={{ marginRight: 16 }}>重发邮件 {record.state}</a>
-            <a  href="/#">赋角色</a>
-            <a  href="/#">修改</a>
-            <a  href="/#">重置密码</a>
-            <a  href="/#">注销</a>
+            <a href="/#" style={{ marginRight: 16 }}>修改 {record.state}</a>
           </span>
         ),
       },
     ];
     return (
       <Fragment>
-        <Card style={{marginBottom:20}}>
-        {this._searchBar()}
-       </Card>
-       <Card >
-        <Table bordered={true} dataSource={dataSource} columns={columns} rowKey={(record, index) => index}
-        pagination = {{
-          showTotal:total => `Total ${total} items`,
-          showQuickJumper:true,
-          total:this.state.total,
-          onChange:this.changePage,
-          current:this.state.pageNum,
-          pageSize:this.state.pageSize
-        }}
-         />
-       </Card>
+        <Card style={{ marginBottom: 20 }}>
+          {this._searchBar()}
+        </Card>
+        <Card >
+          <Table className="tableClass" bordered={true} dataSource={dataSource} columns={columns} rowKey={(record, index) => index}
+            pagination={{
+              showTotal: total => `Total ${total} items`,
+              showQuickJumper: true,
+              total: this.state.total,
+              onChange: this.changePage,
+              current: this.state.pageNum,
+              pageSize: this.state.pageSize
+            }}
+          />
+        </Card>
+        <ModelAdd self={this} ref="modelAdd" visible={this.state.visible} onCreate={this.onCreate} onCancel={() => {
+          // 清除子组件表单数据
+          this.refs.modelAdd.formRef.current.resetFields()
+          this.setState({
+            visible: false
+          })
+        }} />
       </Fragment>
-    
+
     )
   }
 }

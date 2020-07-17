@@ -16,10 +16,16 @@ import { Provider } from "react-redux";
 import store from "./store";
 import Page from './Page';
 
+
+import { ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
+
 function App() {
   return (
     <Provider store={store}>
-      <Page/>
+      <ConfigProvider locale={zhCN}>
+        <Page/>
+      </ConfigProvider>
 {/* // 测试路由组件 */}
       {/* <div className="App">
         <header className="App-header">
