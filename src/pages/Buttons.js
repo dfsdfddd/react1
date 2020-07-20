@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Cascader, Table, Form, Input, Button, Row, Col, Card, message, Select, DatePicker, Modal } from 'antd';
+import { Cascader, Table, Form, Input, Button, Row, Col, Card, message, Select, DatePicker, Modal, Upload } from 'antd';
+// import { UploadOutlined } from '@ant-design/icons';
 
 // https://www.jianshu.com/p/8a04823ab900  表单校验rules 方法
 // https://blog.csdn.net/nameisyaya/article/details/82189485 // 父子组件传值
@@ -14,6 +15,7 @@ import {
   popupAdsModify,
   getOrgList
 } from "../api/advertManage.js";
+// import moment from 'moment';
 //需要的接口
 
 // 定义的属性必须放在 import之后 否者报错
@@ -27,6 +29,8 @@ class ModelAdd extends Component {
     this.state = {
       adsType: '',
       actionType: '',
+      fileList: [],
+      fileList2: []
     }
   }
   componentDidMount() {
@@ -53,6 +57,7 @@ class ModelAdd extends Component {
     })
   }
   actionTypeChange = (value) => {
+    console.log(value)
     this.setState({
       actionType: value
     })
@@ -67,6 +72,90 @@ class ModelAdd extends Component {
         span: 16,
       },
     };
+    const _this = this
+    const uploadCommonUp = {
+      name: 'file',
+      action: 'http://10.213.50.13:10000/mabaseMan/popupAds/uploadFile',
+      headers: {
+        token: sessionStorage.getItem('theToken'),
+      },
+    }
+    const uploadOption = {
+      ...uploadCommonUp,
+      fileList: this.state.fileList,
+      beforeUpload(file) {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+          message.error('上传格式只能是 jpg、png、gif 格式');
+        }
+        const isLt3M = file.size / 1024 / 1024 < 3
+        if (!isLt3M) {
+          message.error('上传图片大小不能超过 3MB!')
+        }
+        return isJpgOrPng && isLt3M
+      },
+      onChange(info) {
+        console.log('info', info)
+        let fileList = [...info.fileList];
+        // 只留列表的最后一个，之前的都删除
+        fileList = fileList.slice(-1);
+        fileList = fileList.map(file => {
+          if (file.response) {
+            const res = file.response
+            if (res.status === 'success') {
+              file.url = res.url;
+              _this.formRef.current.setFieldsValue({ imgPath: res.data.groupName + "," + res.data.remoteFileName })
+            } else {
+              _this.formRef.current.setFieldsValue({ imgPath: '' })
+              file.status = 'error'
+              message.error(res.msg)
+            }
+          }
+          return file;
+        });
+        console.log(fileList)
+        _this.setState({ fileList });
+      },
+    }
+    const uploadOption2 = {
+      ...uploadCommonUp,
+      fileList: this.state.fileList2,
+      beforeUpload(file) {
+        const extension = file.name.split('.')[1] === 'txt'
+        if (!extension) {
+          message.error('上传格式只能是 txt 格式')
+        }
+        const isLt3M = file.size / 1024 / 1024 < 10
+        if (!isLt3M) {
+          message.error('上传文件大小不能超过 10MB!')
+        }
+        console.log(extension && isLt3M)
+        return extension && isLt3M
+      },
+      onChange(info) {
+        console.log(info)
+        let fileList = [...info.fileList];
+        // 只留列表的最后一个，之前的都删除
+        fileList = fileList.slice(-1);
+        fileList = fileList.map(file => {
+          if (file.response) {
+            const res = file.response
+            if (res.status === 'success') {
+              file.url = res.url;
+              _this.formRef.current.setFieldsValue({ actionStoragePath: res.data.groupName + "," + res.data.remoteFileName })
+            } else {
+              _this.formRef.current.setFieldsValue({ actionStoragePath: '' })
+              file.status = 'error'
+              message.error(res.msg)
+            }
+          }
+          return file;
+        });
+        console.log(fileList)
+        _this.setState({ fileList2: fileList });
+      },
+    }
+    console.log(uploadOption2)
     return (
       <Modal
         visible={visible}
@@ -122,6 +211,15 @@ class ModelAdd extends Component {
             </Select>
           </Form.Item>
           {this.state.adsType === '01' ? (<Fragment>
+            <Form.Item name="imgPath" label="上传图片" hasFeedback rules={[{
+              required: true,
+              message: '请输入图片链接'
+            }]}
+            >
+              <Upload {...uploadOption} >
+                <Button>点击上传</Button>
+              </Upload>
+            </Form.Item>
             <Form.Item name="imgClickUrl" label="图片链接" hasFeedback rules={[{
               required: true,
               message: '请输入图片链接'
@@ -160,17 +258,17 @@ class ModelAdd extends Component {
               <Input.TextArea rows={4} />
             </Form.Item>
           </Fragment>) : ''}
-          <Form.Item onChange={this.actionTypeChange} name="actionType" label="弹窗对象" hasFeedback rules={[{
+          <Form.Item name="actionType" label="弹窗对象" hasFeedback rules={[{
             required: true,
             message: '请选择弹窗对象'
           }]}
           >
-            <Select style={{ width: 200 }} placeholder='请选择' allowClear={true}>
+            <Select onChange={this.actionTypeChange} style={{ width: 200 }} placeholder='请选择' allowClear={true}>
               {self.state.actionTypeOption && Object.keys(self.state.actionTypeOption).map(key => <Option value={key} key={key}>{self.state.actionTypeOption[key]}</Option>)}
 
             </Select>
           </Form.Item>
-          {this.state.actionType === '04'?(<Form.Item name="actionOrgNo" label="所属机构" hasFeedback rules={[{
+          {this.state.actionType === '04' ? (<Form.Item name="actionOrgNo" label="所属机构" hasFeedback rules={[{
             required: true,
             message: '请输入内容1'
           }]}
@@ -180,8 +278,18 @@ class ModelAdd extends Component {
               label: 'orgNm',
               children: 'lowList'
             }} placeholder="请选择" changeOnSelect={true} showSearch={true} />
-          </Form.Item>):''}
-          
+          </Form.Item>) : ''}
+          {this.state.actionType === '02' || this.state.actionType === '03' ? (<Form.Item name="actionStoragePath" label={this.state.actionType === '02' ? '上传商户列表' : '上传代理商列表'} hasFeedback rules={[{
+            required: true,
+            message: '请上传商户列表'
+          }]}
+          >
+            <Upload {...uploadOption2} >
+              <Button>点击上传</Button>
+            </Upload>
+          </Form.Item>) : ""}
+
+
           <Form.Item name="actionFrequency" label="弹窗频率" hasFeedback rules={[{
             required: true,
             message: '请选择弹窗频率'
@@ -214,8 +322,8 @@ class ModelAdd extends Component {
             message: '请输入结束日期'
           }, ({ getFieldValue }) => ({
             validator(rule, value) {
-              console.log(value)
-              console.log(value*1)
+              console.log(value.format('YYYYMMDD'))
+              console.log(value * 1)
               if (value && getFieldValue("startDate") && value * 1 < getFieldValue('startDate') * 1) {
                 return Promise.reject('结束日期应大于开始日期')
               }
@@ -316,9 +424,36 @@ class Buttons extends Component {
       }
     })
   }
+   // 新增
+   popupAdsAdd(values) {
+    const data = { ...values };
+    // 处理机构号和机构名称
+    if(data.actionType === '04'){
+      // data.actionOrgNo = values.actionOrgNo.slice(-1) todo
+      const orgObj = this.findObj(this.optionsList,data.actionOrgNo)
+      data.actionOrgName = orgObj.orgNm
+    }else{
+      data.actionOrgNo = ''
+    }
+    data.startDate = values.startDate.format('YYYYMMDD')
+    data.endDate = values.endDate.format('YYYYMMDD')
+    console.log(data)
+    // this.goformbtn = true
+    popupAdsAdd(data).then(result => {
+        // this.goformbtn = false
+        const res = result.data;
+        if (res.status === 'success') {
+          message.success(res.msg);
+          this._popupAdsQuery();
+          this.setState({ visible: false })
+        } else {
+          message.error(res.msg);
+        }
+      })
+  }
   onCreate = values => {
     console.log('Received values of form: ', values);
-    this.setState({ visible: false })
+    this.popupAdsAdd(values)
   }
   _searchBar() {
     // 定义布局样式
