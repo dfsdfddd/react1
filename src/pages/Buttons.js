@@ -15,7 +15,8 @@ import {
   popupAdsModify,
   getOrgList
 } from "../api/advertManage.js";
-// import moment from 'moment';
+import {getParents,findObj} from '../utils/index';
+import moment from 'moment';
 //需要的接口
 
 // 定义的属性必须放在 import之后 否者报错
@@ -29,12 +30,128 @@ class ModelAdd extends Component {
     this.state = {
       adsType: '',
       actionType: '',
+      addChangeTitle:'新增',
       fileList: [],
-      fileList2: []
+      fileList2: [],
+      modifyData:{},
+      form2:{
+        adsId:"",
+        adsName: "", // 广告名称
+        adsType: "", // 广告方式
+        imgPath:"",// 图片存放路径
+        imgClickUrl: "", //图片url
+        adsTitle: "", // 广告标题
+        adsContent: "", //广告内容
+        btnText: "", // 按钮文字
+        btnClickUrl: "", // 按钮链接
+        actionType: "", //弹窗对象
+        actionOrgNo:[], // 机构号
+        actionOrgName:"",// 机构名称
+        actionStoragePath:"",//弹窗对象列表文件存放路径
+        actionFrequency: "", //弹窗频率
+        startDate: "", //开始时间
+        endDate: "", //结束时间
+        state: "00", //状态
+      }
     }
   }
   componentDidMount() {
     this._getOrgList()
+  }
+  componentWillReceiveProps(nextProps){
+    if(nextProps.addChangeTitle === '修改'){
+      const row = nextProps.modifyData
+
+      //机构
+      let orgNolist = []
+      if(row.actionType === '04'){
+        let listarr = getParents(this.optionsList, row.actionOrgNo)
+        listarr.push(row.actionOrgNo)
+        orgNolist = listarr
+      }
+      // 保存图片和文件链接
+      this.keepImagePath=row.imgPath;
+      this.keepactionStoragePath= row.actionStoragePath;
+      console.log(row)
+      // this.setState({
+      //   form2:{
+      //     adsId:row.adsId,
+      //     adsName: row.adsName, // 广告名称
+      //     adsType: row.adsType, // 广告方式
+  
+      //     imgPath:row.imgPath,// 图片存放路径
+      //     imgClickUrl: row.imgClickUrl, //图片url
+  
+      //     adsTitle: row.adsTitle, // 广告标题
+      //     adsContent: row.adsContent, //广告内容
+      //     btnText: row.btnText, // 按钮文字
+      //     btnClickUrl: row.btnClickUrl, // 按钮链接
+      //     actionType: row.actionType, //弹窗对象
+      //     actionOrgNo:row.actionOrgNo, // 机构号
+      //     actionOrgName:row.actionOrgName,// 机构名称
+      //     actionStoragePath:row.actionStoragePath,//弹窗对象列表文件存放路径
+      //     actionFrequency: row.actionFrequency, //弹窗频率
+      //     startDate: row.startDate, //开始时间
+      //     endDate: row.endDate, //结束时间
+      //     state: row.state, //状态
+      //   }
+      // },()=>{
+      //   console.log(this.state.form2)
+      // })
+      // return
+
+      this.setState({
+        adsType:row.adsType,
+        actionType:row.actionType,
+      })
+      setTimeout(() => {
+        console.log(this.state.form2.actionOrgNo)
+        this.formRef.current.setFieldsValue({
+          adsId:row.adsId,
+          adsName: row.adsName, // 广告名称
+          adsType: row.adsType, // 广告方式
+  
+          imgPath:row.imgPath,// 图片存放路径
+          imgClickUrl: row.imgClickUrl, //图片url
+  
+          adsTitle: row.adsTitle, // 广告标题
+          adsContent: row.adsContent, //广告内容
+          btnText: row.btnText, // 按钮文字
+          btnClickUrl: row.btnClickUrl, // 按钮链接
+          actionType: row.actionType, //弹窗对象
+          actionOrgNo:orgNolist, // 机构号
+          actionOrgName:row.actionOrgName,// 机构名称
+          actionStoragePath:row.actionStoragePath,//弹窗对象列表文件存放路径
+          actionFrequency: row.actionFrequency, //弹窗频率
+          startDate: moment(row.startDate), //开始时间
+          endDate: moment(row.endDate), //结束时间
+          state: row.state, //状态
+        })
+        if(row.adsType === '01'){
+          this.setState({
+            fileList:[{
+              uid: '-1',
+              name: row.imgPath,
+              status: 'done',
+              url: popupAdsDown(row.imgPath),
+              thumbUrl: popupAdsDown(row.imgPath),
+            }],
+          })
+        }
+        if(row.actionType==='02'||row.actionType==='03'){
+          this.setState({
+            fileList2:[{
+              uid: '-1',
+              name: row.actionStoragePath,
+              status: 'done',
+              url: popupAdsDown(row.actionStoragePath),
+              thumbUrl: popupAdsDown(row.actionStoragePath),
+            }],
+          })
+        }
+        console.log(this.formRef.current.getFieldsValue())
+      }, 5);
+    }
   }
   _getOrgList() {
     getOrgList().then((result) => {
@@ -63,7 +180,7 @@ class ModelAdd extends Component {
     })
   }
   render() {
-    const { visible, onCancel, onCreate, self } = this.props
+    const { visible, onCancel, onCreate, self,addChangeTitle } = this.props
     const layouts = {
       labelCol: {
         span: 8,
@@ -83,6 +200,7 @@ class ModelAdd extends Component {
     const uploadOption = {
       ...uploadCommonUp,
       fileList: this.state.fileList,
+      listType: 'picture',
       beforeUpload(file) {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
@@ -159,7 +277,7 @@ class ModelAdd extends Component {
     return (
       <Modal
         visible={visible}
-        title="新增"
+        title={addChangeTitle}
         okText="确定"
         cancelText="取消"
         onCancel={onCancel}
@@ -175,24 +293,7 @@ class ModelAdd extends Component {
           ref={this.formRef}
           layout={layouts}
           name="form_in_model"
-          initialValues={{
-            adsName: "", // 广告名称
-            adsType: "", // 广告方式
-            imgPath: "",// 图片存放路径
-            imgClickUrl: "", //图片url
-            adsTitle: "", // 广告标题
-            adsContent: "", //广告内容
-            btnText: "", // 按钮文字
-            btnClickUrl: "", // 按钮链接
-            actionType: "", //弹窗对象
-            actionOrgNo: this.defaultOrg || [], // 机构号
-            actionOrgName: "",// 机构名称
-            actionStoragePath: "",//弹窗对象列表文件存放路径
-            actionFrequency: "", //弹窗频率
-            startDate: "", //开始时间
-            endDate: "", //结束时间
-            state: "00"
-          }}
+          initialValues={this.state.form2}
         >
           <Form.Item name="adsName" label="广告名称" hasFeedback rules={[{
             required: true,
@@ -279,6 +380,7 @@ class ModelAdd extends Component {
               children: 'lowList'
             }} placeholder="请选择" changeOnSelect={true} showSearch={true} />
           </Form.Item>) : ''}
+          
           {this.state.actionType === '02' || this.state.actionType === '03' ? (<Form.Item name="actionStoragePath" label={this.state.actionType === '02' ? '上传商户列表' : '上传代理商列表'} hasFeedback rules={[{
             required: true,
             message: '请上传商户列表'
@@ -420,17 +522,22 @@ class Buttons extends Component {
           total: res.data.total,
         })
       } else {
-        this.$message.error(res.msg);
+        message.error(res.msg);
       }
     })
+  }
+  clearAndHideModel(){
+    this.refs.modelAdd.formRef.current.resetFields() // 清空表单
+    this.setState({visible:false})
   }
    // 新增
    popupAdsAdd(values) {
     const data = { ...values };
     // 处理机构号和机构名称
     if(data.actionType === '04'){
-      // data.actionOrgNo = values.actionOrgNo.slice(-1) todo
-      const orgObj = this.findObj(this.optionsList,data.actionOrgNo)
+      data.actionOrgNo = values.actionOrgNo.slice(-1)[0]
+      const optionsList = this.refs.modelAdd.optionsList
+      const orgObj = findObj(optionsList,data.actionOrgNo)
       data.actionOrgName = orgObj.orgNm
     }else{
       data.actionOrgNo = ''
@@ -445,12 +552,45 @@ class Buttons extends Component {
         if (res.status === 'success') {
           message.success(res.msg);
           this._popupAdsQuery();
-          this.setState({ visible: false })
+          this.clearAndHideModel()
         } else {
           message.error(res.msg);
         }
       })
   }
+  addNew = ()=>{
+    this.setState({
+      visible:true,
+      addChangeTitle:'新增',
+      fileList1:[],
+      fileList2:[]
+    })
+  }
+  handleClick(row, flag){
+      this.setState({
+        visible:true,
+        addChangeTitle:'修改',
+        modifyData:row
+    })
+    // 设置model表单field
+
+    // dialog title
+    // setfieldvalues
+    // Object.keys
+
+    // if(row.adsType === '01'){
+    //   this.fileList1 = [{ name: row.imgPath, url: popupAdsDown(row.imgPath) }]
+    // }
+    // if(row.actionType==='02'||row.actionType==='03'){
+    //   this.fileList2 = [{ name: row.actionStoragePath, url: popupAdsDown(row.actionStoragePath) }]
+    // }
+    // if(row.actionType === '04'){
+    //   let listarr = this.getParents(this.optionsList, row.actionOrgNo)
+    //   listarr.push(row.actionOrgNo)
+    //   this.form2.actionOrgNo = listarr
+    // }
+  }
+
   onCreate = values => {
     console.log('Received values of form: ', values);
     this.popupAdsAdd(values)
@@ -555,7 +695,7 @@ class Buttons extends Component {
           <Col span={6}>
             <Form.Item style={{ marginTop: 35 }}>
               <Button type="primary" htmlType="submit">查询</Button>
-              <Button onClick={() => { this.setState({ visible: true }) }} style={{ marginLeft: 20 }} type="primary">新增</Button>
+              <Button onClick={this.addNew} style={{ marginLeft: 20 }} type="primary">新增</Button>
             </Form.Item>
           </Col>
         </Row>
@@ -634,9 +774,7 @@ class Buttons extends Component {
         key: 'action',
         dataIndex: 'action',
         render: (text, record) => (
-          <span>
-            <a href="/#" style={{ marginRight: 16 }}>修改 {record.state}</a>
-          </span>
+            <Button size='small' type='primary' onClick={()=>this.handleClick(record,true)} style={{ marginRight: 16 }}>修改 {record.state}</Button>
         ),
       },
     ];
@@ -657,7 +795,7 @@ class Buttons extends Component {
             }}
           />
         </Card>
-        <ModelAdd self={this} ref="modelAdd" visible={this.state.visible} onCreate={this.onCreate} onCancel={() => {
+        <ModelAdd self={this} ref="modelAdd" modifyData={this.state.modifyData} addChangeTitle={this.state.addChangeTitle} visible={this.state.visible} onCreate={this.onCreate} onCancel={() => {
           // 清除子组件表单数据
           this.refs.modelAdd.formRef.current.resetFields()
           this.setState({

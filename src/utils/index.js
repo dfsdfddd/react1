@@ -31,3 +31,32 @@ export function initPassPlug(id, browserParam, placeHoder){
 
       return pgeditor
 }
+
+ // 根据机构号
+export function findObj(arr, str) {
+  var obj = null
+  for (const key in arr) {
+    if (!obj) {
+      if (arr[key].orgNo === str) {
+        obj = arr[key]
+        break
+      } else if (arr[key].lowList && arr[key].lowList.length > 0) {
+        obj = findObj(arr[key].lowList, str)
+      }
+    }
+  }
+  return obj
+}
+
+// 回显示机构号
+export function getParents(data, id) {
+  for (var i in data) {
+    if (data[i].orgNo === id) {
+      return []
+    }
+    if (data[i].lowList) {
+      var ro = getParents(data[i].lowList, id)
+      if (ro !== undefined) { return ro.concat(data[i].orgNo) }
+    }
+  }
+}

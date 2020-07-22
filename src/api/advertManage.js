@@ -18,7 +18,7 @@ export function popupAdsAdd(data) {
 }
 // 3.下载图片或弹窗对象列表文件
 export function popupAdsDown(data) {
-  return `http://10.213.50.13:10000//mabaseMan/popupAds/down?groupName=${data.split(',')[0]}&remoteFileName=${data.split(',')[1]}`
+  return `http://10.213.50.13:10000/mabaseMan/popupAds/down?groupName=${data.split(',')[0]}&remoteFileName=${data.split(',')[1]}`
 }
 // 获取数据字典
 export function getDataDicTionary(data) {
