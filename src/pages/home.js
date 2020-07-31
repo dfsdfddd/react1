@@ -34,25 +34,21 @@ class Home extends Component{
   };
   render(){
     return(
-      <Layout>
+      <Layout className='setDefault'>
         <SiderCustom collapsed={this.state.collapsed
         }></SiderCustom>
         <Layout id="layout-trigger" className="site-layout" style={{ marginLeft: this.state.collapsed?80:200 }}>
-          <Header className="site-layout-background" style={{ padding: 0 }}>
+          <Header className="site-layout-background headerBorder" style={{ padding: 0}}>
             {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
               className: 'trigger',
               onClick: this.toggle,
             })}
           </Header>
           <Content
-            className="site-layout-background"
-            style={{
-              margin: '24px 16px',
-              padding: 24,
-              minHeight: 280,
-            }}
+            className="site-layout-background calcContent"
+            style={{paddingLeft:20,paddingRight:20,paddingTop:20}}
           >
-            <RoutePage />
+              <RoutePage />
           </Content>
         </Layout>
       </Layout>
