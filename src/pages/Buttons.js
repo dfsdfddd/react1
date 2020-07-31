@@ -30,38 +30,25 @@ class ModelAdd extends Component {
     this.state = {
       adsType: '',
       actionType: '',
-      addChangeTitle:'新增',
       fileList: [],
       fileList2: [],
-      modifyData:{},
-      form2:{
-        adsId:"",
-        adsName: "", // 广告名称
-        adsType: "", // 广告方式
-        imgPath:"",// 图片存放路径
-        imgClickUrl: "", //图片url
-        adsTitle: "", // 广告标题
-        adsContent: "", //广告内容
-        btnText: "", // 按钮文字
-        btnClickUrl: "", // 按钮链接
-        actionType: "", //弹窗对象
-        actionOrgNo:[], // 机构号
-        actionOrgName:"",// 机构名称
-        actionStoragePath:"",//弹窗对象列表文件存放路径
-        actionFrequency: "", //弹窗频率
-        startDate: "", //开始时间
-        endDate: "", //结束时间
-        state: "00", //状态
-      }
     }
+  }
+  addResetForm(){
+    this.setState({
+      adsType: '',
+      actionType: '',
+      fileList: [],
+      fileList2: [],
+    })
   }
   componentDidMount() {
     this._getOrgList()
   }
   componentWillReceiveProps(nextProps){
-    if(nextProps.addChangeTitle === '修改'){
+    if(nextProps.addChangeTitle === '修改'&&nextProps.visible){
+      console.log('in xiugai1')
       const row = nextProps.modifyData
-
       //机构
       let orgNolist = []
       if(row.actionType === '04'){
@@ -73,39 +60,12 @@ class ModelAdd extends Component {
       this.keepImagePath=row.imgPath;
       this.keepactionStoragePath= row.actionStoragePath;
       console.log(row)
-      // this.setState({
-      //   form2:{
-      //     adsId:row.adsId,
-      //     adsName: row.adsName, // 广告名称
-      //     adsType: row.adsType, // 广告方式
-  
-      //     imgPath:row.imgPath,// 图片存放路径
-      //     imgClickUrl: row.imgClickUrl, //图片url
-  
-      //     adsTitle: row.adsTitle, // 广告标题
-      //     adsContent: row.adsContent, //广告内容
-      //     btnText: row.btnText, // 按钮文字
-      //     btnClickUrl: row.btnClickUrl, // 按钮链接
-      //     actionType: row.actionType, //弹窗对象
-      //     actionOrgNo:row.actionOrgNo, // 机构号
-      //     actionOrgName:row.actionOrgName,// 机构名称
-      //     actionStoragePath:row.actionStoragePath,//弹窗对象列表文件存放路径
-      //     actionFrequency: row.actionFrequency, //弹窗频率
-      //     startDate: row.startDate, //开始时间
-      //     endDate: row.endDate, //结束时间
-      //     state: row.state, //状态
-      //   }
-      // },()=>{
-      //   console.log(this.state.form2)
-      // })
-      // return
-
       this.setState({
         adsType:row.adsType,
         actionType:row.actionType,
       })
+      // 这个setTimeout是为了获取dom
       setTimeout(() => {
-        console.log(this.state.form2.actionOrgNo)
         this.formRef.current.setFieldsValue({
           adsId:row.adsId,
           adsName: row.adsName, // 广告名称
@@ -159,8 +119,6 @@ class ModelAdd extends Component {
       if (res.code !== 200) return message.warning(res.msg)
       this.optionsList = res.data.orgList
       this.defaultOrg = [res.data.orgNo]
-      console.log(this.optionsList)
-      // this.form.orgNo = [res.data.orgNo] // 设置默认机构号
     }).catch((err) => {
       console.log("查询机构报错：" + err)
     });
@@ -174,7 +132,6 @@ class ModelAdd extends Component {
     })
   }
   actionTypeChange = (value) => {
-    console.log(value)
     this.setState({
       actionType: value
     })
@@ -228,6 +185,7 @@ class ModelAdd extends Component {
               file.status = 'error'
               message.error(res.msg)
             }
+            this.formRef.current.validateFields(['imgPath'])
           }
           return file;
         });
@@ -273,7 +231,6 @@ class ModelAdd extends Component {
         _this.setState({ fileList2: fileList });
       },
     }
-    console.log(uploadOption2)
     return (
       <Modal
         visible={visible}
@@ -284,7 +241,6 @@ class ModelAdd extends Component {
         onOk={() => {
           this.formRef.current.validateFields().then(values => {
             console.log(values)
-            // this.formRef.current.resetFields() // 清空表单
             onCreate(values)
           })
         }}
@@ -293,7 +249,24 @@ class ModelAdd extends Component {
           ref={this.formRef}
           layout={layouts}
           name="form_in_model"
-          initialValues={this.state.form2}
+          initialValues={{adsId:"",
+          adsName: "", // 广告名称
+          adsType: "", // 广告方式
+          imgPath:"",// 图片存放路径
+          imgClickUrl: "", //图片url
+          adsTitle: "", // 广告标题
+          adsContent: "", //广告内容
+          btnText: "", // 按钮文字
+          btnClickUrl: "", // 按钮链接
+          actionType: "", //弹窗对象
+          actionOrgNo:[], // 机构号
+          actionOrgName:"",// 机构名称
+          actionStoragePath:"",//弹窗对象列表文件存放路径
+          actionFrequency: "", //弹窗频率
+          startDate: "", //开始时间
+          endDate: "", //结束时间
+          state: "00", //状态
+        }}
         >
           <Form.Item name="adsName" label="广告名称" hasFeedback rules={[{
             required: true,
@@ -471,6 +444,8 @@ class Buttons extends Component {
     actionTypeOption: {},
     adsTypeOption: {},
     stateOption: {},
+    modifyData:{}, // 点击编辑修改的内容
+    addChangeTitle:'新增'// 
   }
   componentDidMount() {
     this._getDataDicTionary()
@@ -507,8 +482,8 @@ class Buttons extends Component {
       adsType: this.state.form.adsType,
       state: this.state.form.state,
       adsName: this.state.form.adsName,
-      queryStartDate: this.valuedate1 || '',
-      queryEndDate: this.valuedate2 || '',
+      queryStartDate: moment(this.state.form.times[0]).format("YYYYMMDD"),
+      queryEndDate: moment(this.state.form.times[1]).format("YYYYMMDD"),
       pageSize: this.pageSize,
       pageNum: this.pageNum
     };
@@ -561,10 +536,9 @@ class Buttons extends Component {
   addNew = ()=>{
     this.setState({
       visible:true,
-      addChangeTitle:'新增',
-      fileList1:[],
-      fileList2:[]
+      addChangeTitle:'新增'
     })
+
   }
   handleClick(row, flag){
       this.setState({
@@ -572,27 +546,10 @@ class Buttons extends Component {
         addChangeTitle:'修改',
         modifyData:row
     })
-    // 设置model表单field
-
-    // dialog title
-    // setfieldvalues
-    // Object.keys
-
-    // if(row.adsType === '01'){
-    //   this.fileList1 = [{ name: row.imgPath, url: popupAdsDown(row.imgPath) }]
-    // }
-    // if(row.actionType==='02'||row.actionType==='03'){
-    //   this.fileList2 = [{ name: row.actionStoragePath, url: popupAdsDown(row.actionStoragePath) }]
-    // }
-    // if(row.actionType === '04'){
-    //   let listarr = this.getParents(this.optionsList, row.actionOrgNo)
-    //   listarr.push(row.actionOrgNo)
-    //   this.form2.actionOrgNo = listarr
-    // }
+    // 具体修改的逻辑在 组件ModelAdd里面的componentWillReceiveProps 里面进行的判断处理
   }
 
   onCreate = values => {
-    console.log('Received values of form: ', values);
     this.popupAdsAdd(values)
   }
   _searchBar() {
@@ -634,7 +591,7 @@ class Buttons extends Component {
         {...layout}
         layout={'vertical'}
         name="basic"
-        initialValues={{ adsId: '', adsType: '', adsName: '', state: '', times: '' }}
+        initialValues={{ adsId: '', adsType: '', adsName: '', state: '', times: [moment(new Date().getTime()),moment(new Date().getTime())] }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
@@ -796,11 +753,15 @@ class Buttons extends Component {
           />
         </Card>
         <ModelAdd self={this} ref="modelAdd" modifyData={this.state.modifyData} addChangeTitle={this.state.addChangeTitle} visible={this.state.visible} onCreate={this.onCreate} onCancel={() => {
+          console.log('in console')
           // 清除子组件表单数据
           this.refs.modelAdd.formRef.current.resetFields()
+          // 隐藏model
           this.setState({
             visible: false
           })
+          // 清除state状态
+          this.refs.modelAdd.addResetForm()
         }} />
       </Fragment>
 

@@ -53,7 +53,6 @@ class Home extends Component{
             }}
           >
             <RoutePage />
-            <div style={{height:'1000px'}}></div>
           </Content>
         </Layout>
       </Layout>
