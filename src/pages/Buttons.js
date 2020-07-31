@@ -185,7 +185,7 @@ class ModelAdd extends Component {
               file.status = 'error'
               message.error(res.msg)
             }
-            this.formRef.current.validateFields(['imgPath'])
+            _this.formRef.current.validateFields(['imgPath'])
           }
           return file;
         });
@@ -205,7 +205,9 @@ class ModelAdd extends Component {
         if (!isLt3M) {
           message.error('上传文件大小不能超过 10MB!')
         }
-        console.log(extension && isLt3M)
+        if(!extension && isLt3M){
+          file.status = 'error'
+        }
         return extension && isLt3M
       },
       onChange(info) {
@@ -224,6 +226,7 @@ class ModelAdd extends Component {
               file.status = 'error'
               message.error(res.msg)
             }
+            _this.formRef.current.validateFields(['actionStoragePath'])
           }
           return file;
         });
@@ -397,8 +400,6 @@ class ModelAdd extends Component {
             message: '请输入结束日期'
           }, ({ getFieldValue }) => ({
             validator(rule, value) {
-              console.log(value.format('YYYYMMDD'))
-              console.log(value * 1)
               if (value && getFieldValue("startDate") && value * 1 < getFieldValue('startDate') * 1) {
                 return Promise.reject('结束日期应大于开始日期')
               }
