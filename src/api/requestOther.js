@@ -2,7 +2,7 @@ import axios from 'axios'
 import { message } from 'antd';
 // import router from '../router'
 
-const baseUrl = "http://10.213.50.13:8086"
+const baseUrl = "http://op.eptok.com"
 const token = sessionStorage.getItem('theToken')
 console.log('token',token)
 
@@ -13,7 +13,7 @@ const instance = axios.create({
   timeout: 50000, // 请求超时时间
   headers:{
     'Content-Type':'application/json',
-    'token':token || ''
+    'token':token || 'f5a3d659-73cf-4441-a992-10cf9381c5ae'
   }
 })
 
@@ -28,10 +28,11 @@ instance.interceptors.request.use(config => {
 instance.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
+  console.log(error.response)
   // 请求错误时做些事
   if (error.message.indexOf('timeout') >= 0) {
     message.error('请求超时');
-  }else if (error.response.status) {
+  }else if (error.response) {
     message.error("错误码:"+error.response.status)
   }else{
     message.error("系统错误")

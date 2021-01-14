@@ -114,6 +114,7 @@ class Login extends Component {
     render() {
         return (
             <div id="login" className="pagehome">
+              {this.username === '123' ? '123' :'456'}
                 <div className="login_box">
                     <div className="login_title"></div>
                     <div className="login_main">

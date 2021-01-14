@@ -269,8 +269,33 @@ class ModelAdd extends Component {
           startDate: "", //开始时间
           endDate: "", //结束时间
           state: "00", //状态
+          testValue1:"",
+          testValue2:"",
         }}
         >
+        <Form.Item noStyle
+          shouldUpdate={(prevValues, currentValues) => prevValues.adsType !== currentValues.adsType}
+        >
+          {({ getFieldValue }) => {
+            return getFieldValue('adsType') === '01' ? (
+              <Form.Item name="testValue1" label="测试1" hasFeedback rules={[{
+                required: true,
+                message: '请输入广告名称'
+              }]}
+              >
+                <Input />
+              </Form.Item>
+            ) : null;
+          }}
+        </Form.Item>
+          
+          <Form.Item name="testValue2" label="测试2" hasFeedback rules={[{
+            required: true,
+            message: '请输入广告名称'
+          }]}
+          >
+            <Input />
+          </Form.Item>
           <Form.Item name="adsName" label="广告名称" hasFeedback rules={[{
             required: true,
             message: '请输入广告名称'
