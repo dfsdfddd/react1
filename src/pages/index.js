@@ -1,7 +1,7 @@
 import Loadable from 'react-loadable';
 // import Buttons from './Buttons';
 import Dashboard from './Dashboard';
-import Icons from './Icons';
+import Advert from './advert';
 import Loading from './Loading';
 import Modals from './Modals';
 import BaseAnimations from './BaseAnimations';
@@ -21,7 +21,7 @@ const Buttons = Loadable({
 export default {
   Buttons,
   Dashboard,
-  Icons,
+  Advert,
   Loading,
   Modals,
   BaseAnimations,

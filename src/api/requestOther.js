@@ -2,7 +2,7 @@ import axios from 'axios'
 import { message } from 'antd';
 // import router from '../router'
 
-const baseUrl = "http://op.eptok.com"
+const baseUrl = "/api"
 const token = sessionStorage.getItem('theToken')
 console.log('token',token)
 
@@ -13,7 +13,7 @@ const instance = axios.create({
   timeout: 50000, // 请求超时时间
   headers:{
     'Content-Type':'application/json',
-    'token':token || 'f5a3d659-73cf-4441-a992-10cf9381c5ae'
+    'token':token || '534d16e2-c152-4307-861f-a378af0bc479'
   }
 })
 
