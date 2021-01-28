@@ -1,10 +1,10 @@
 
-import React,{Component} from 'react';
+import React,{Component} from "react";
 
 class Modals extends Component{
-  render(){
-    return (<h1>Modals</h1>)
-  }
+	render(){
+		return (<h1>Modals</h1>);
+	}
 }
 
-export default Modals
+export default Modals;

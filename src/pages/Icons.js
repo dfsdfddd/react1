@@ -6,32 +6,32 @@
  * @Description: In User Settings Edit
  * @FilePath: /react1/src/pages/Icons.js
  */ 
-import React,{Component,Fragment} from 'react';
-import { Card } from 'antd';
+import React,{Component,Fragment} from "react";
+import { Card } from "antd";
 
-  import { createtext } from '../api/eggapi'
+import { createtext } from "../api/eggapi";
 class Icons extends Component{
-  componentDidMount(){
-    const data = {
-      name:'ajlsdjljf',
-      weight:'802384px'
-    }
-    createtext(data).then((result) => {
-      const res = result.data
-      console.log(res)
-    }).catch((err) => {
-      console.log(err)
-    });
-  }
-  render(){
-    return (
-      <Fragment>
-        <Card title={'表单提交'}>
+	componentDidMount(){
+		const data = {
+			name:"ajlsdjljf",
+			weight:"802384px"
+		};
+		createtext(data).then((result) => {
+			const res = result.data;
+			console.log(res);
+		}).catch((err) => {
+			console.log(err);
+		});
+	}
+	render(){
+		return (
+			<Fragment>
+				<Card title={"表单提交"}>
 
-        </Card>
-      </Fragment>
-    )
-  }
+				</Card>
+			</Fragment>
+		);
+	}
 }
 
-export default Icons
+export default Icons;

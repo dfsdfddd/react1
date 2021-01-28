@@ -78,3 +78,12 @@ import {produce} from 'immer';
 react 配置eslint 教程 https://www.npmjs.com/package/eslint
 https://blog.csdn.net/weixin_34082695/article/details/88659928
 
+react create-react-app 创建eslint项目
+
+1、npm install eslint -D  // 有的只能装当前create-react-app 支持的版本，当前eslint 为 "eslint@6.6.0"
+2、初始化eslint
+ ./node_modules/.bin/eslint --init
+
+ 第二步可能不会用到 .eslintrc.js 而是直接在 package.json 里面的eslintConfig里面做配置
+ 也可以吧 .eslintrc.js 里面的内容放到 eslintConfig 里面
+

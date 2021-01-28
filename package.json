@@ -24,13 +24,38 @@
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
+  "parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 2018,
+		"sourceType": "module"
+	},
   "eslintConfig": {
     "extends": "react-app",
     "plugins": [
+      "react",
       "react-hooks"
     ],
     "rules": {
-      "react-hooks/rules-of-hooks": "error"
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "indent": [
+        "error",
+        "tab"
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "quotes": [
+        "error",
+        "double"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
     }
   },
   "browserslist": {
