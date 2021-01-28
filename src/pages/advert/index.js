@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import {  Card, message} from 'antd';
+import {     Card, message} from 'antd';
 import SerchBar from './components/SerchBar';
 import PageTable from './components/PageTable';
 import AddModel from './components/AddModel';

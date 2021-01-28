@@ -69,3 +69,12 @@ const {history} = this.props
 // 父子组件传值
 
 static 可以被子类继承 ， 不能被实例继承。https://blog.csdn.net/qdmoment/article/details/82496685?utm_source=blogkpcl5
+
+
+import {produce} from 'immer';
+*immer 可以用作reducer 和 state 深层次嵌套的对象合并
+
+
+react 配置eslint 教程 https://www.npmjs.com/package/eslint
+https://blog.csdn.net/weixin_34082695/article/details/88659928
+

@@ -10,6 +10,7 @@ export default {
       children:[
         {path:'/home/ui/buttons',name:'用户查询',component:'Buttons'},
         {path:'/home/ui/advert',name:'重新定义',component:'Advert'},
+        {path:'/home/ui/advert-hooks',name:'advert-hooks',component:'AdHooksPage'},
         {path:'/home/ui/loading',name:'加载中',component:'Loading'},
         {path:'/home/ui/modals',name:'对话框',component:'Modals'},
       ]

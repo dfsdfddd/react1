@@ -2,6 +2,7 @@ import Loadable from 'react-loadable';
 // import Buttons from './Buttons';
 import Dashboard from './Dashboard';
 import Advert from './advert';
+import AdHooksPage from './advertHooks';
 import Loading from './Loading';
 import Modals from './Modals';
 import BaseAnimations from './BaseAnimations';
@@ -22,6 +23,7 @@ export default {
   Buttons,
   Dashboard,
   Advert,
+  AdHooksPage,
   Loading,
   Modals,
   BaseAnimations,

@@ -1,14 +1,10 @@
 
-import React,{ Component } from "react";
+import React from "react";
 
-class Loading extends Component{
-  render(){
-    return(
-      <div className='pagehome'>
-        <h1>Loading page</h1>
-      </div>
-    )
-  }
+
+const Loading = (props) =>{
+  console.log(props)
+  return (<div>this is loading</div>)
 }
 
 export default Loading
