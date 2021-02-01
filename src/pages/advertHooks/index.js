@@ -1,4 +1,4 @@
-import React,{useEffect,useState,useCallback,Fragment,useRef,forwardRef,useMemo} from "react";
+import React,{useEffect,useState,useCallback,Fragment,useRef,useMemo} from "react";
 import {  Card, message} from "antd";
 import { getDataDicTionary,popupAdsQuery} from "../../api/advertManage.js";
 import moment from "moment";
@@ -7,7 +7,7 @@ import moment from "moment";
 import SerchBar from "./componets/SerchBar";
 import PageTable from "./componets/PageTable";
 import AddModel from "./componets/AddModel";
-import TestCom from "./componets/TestCom";
+// import TestCom from "./componets/TestCom";
 
 const AdHooksPage = (props) =>{
 	// ref

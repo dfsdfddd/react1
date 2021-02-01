@@ -63,6 +63,7 @@ const AddModel = (props,ref) =>{
 	}));
 	useEffect(()=>{
 		console.log("init add model");
+		_getOrgList();
 		// JSON.stringify(baseMap) !== "{}" && _getOrgList();
 	},[]);
 	useEffect(()=>{
