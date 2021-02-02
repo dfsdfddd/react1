@@ -58,11 +58,10 @@ const AdHooksPage = (props) =>{
 		addModel1.current.isShowModel(title);
 	},[]); 
 	const handleClick = useCallback((row) => {
-  	addModel1.modifyData("修改",row);
+  	addModel1.current.modifyData("修改",row);
 	},[]);
 
 	const baseQuery = useCallback(()=>{
-  	console.log("serchBar1",serchBar1);
   	serchBar1.clickSubmit();
 	},[]);
 	const changePage = useCallback((page) => {
@@ -71,15 +70,7 @@ const AdHooksPage = (props) =>{
   
 	},[]);
   
-	// const tableData = {
-	// 	baseMap,
-	// 	dataSource:dataList,
-	// 	total:total,
-	// 	current:pageNum,
-	// 	changePage:changePage,
-	// 	handleClick
-	// };
-  
+	
 	const tableData = useMemo(()=>{
 		return {
 			baseMap,
@@ -94,16 +85,11 @@ const AdHooksPage = (props) =>{
 	const newBaseMap = useMemo(()=>{
 		return {baseMap};
 	},[baseMap]);
-	// pageAssemble
-	// const SerchBarWrap = forwardRef((props,ref)=>{
-	// 	return(<SerchBar ref={ref} {...props} />);
-	// });
-  
-	// const AddModelWrap = forwardRef(AddModel);
+	
 	return (
 		<Fragment>
 			<Card style={{ marginBottom: 20 }}>
-				{<SerchBar ref={serchBar1} {...baseMap} adsQuery={adsQuery} addNewOrModi={addNewOrModi} />}
+				{<SerchBar ref={serchBar1} {...newBaseMap} adsQuery={adsQuery} addNewOrModi={addNewOrModi} />}
 			</Card>
 			<Card >
 				{<PageTable {...tableData} />}

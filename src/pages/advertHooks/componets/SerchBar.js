@@ -28,7 +28,9 @@ const FormRefWraper = forwardRef((props,ref)=>{
 const SerchBar = (props,ref) => {
 	console.log("SerchBar");
 	console.log(props);
-	const { state: stateOption, adsType: adsTypeOption, addNewOrModi } = props;
+	const {  baseMap,addNewOrModi } = props;
+	const { state: stateOption, adsType: adsTypeOption } = baseMap;
+  
 
 	// useEffect(()=>{},[]);
 

@@ -15,7 +15,25 @@ const layouts = {
 		span: 16,
 	},
 };
-
+const initValues = {
+	adsId:"",
+	adsName: "", // 广告名称
+	adsType: "", // 广告方式
+	imgPath:"",// 图片存放路径
+	imgClickUrl: "", //图片url
+	adsTitle: "", // 广告标题
+	adsContent: "", //广告内容
+	btnText: "", // 按钮文字
+	btnClickUrl: "", // 按钮链接
+	actionType: "", //弹窗对象
+	actionOrgNo:[], // 机构号
+	actionOrgName:"",// 机构名称
+	actionStoragePath:"",//弹窗对象列表文件存放路径
+	actionFrequency: "", //弹窗频率
+	startDate: "", //开始时间
+	endDate: "", //结束时间
+	state: "00" //状态
+};
 const uploadCommonUp = {
 	name: "file",
 	action: "http://op.eptok.com/mabaseMan/popupAds/uploadFile",
@@ -29,19 +47,6 @@ const FormRefWraper = forwardRef((props,ref)=>{
 });
 
 const AddModel = (props,ref) =>{
-	// useImperativeHandle(ref, () => ({
-	// 	isShowModel:"123"
-	// }));
-  
-	// console.log("this is in AddModel");
-	// useEffect(()=>{
-	// 	console.log("test []");
-	// },[]);
-	// useEffect(()=>{
-	// 	console.log("test props");
-	// },[props]);
-	// return (<div>{JSON.stringify(props.baseMap)}</div>);
-  
   
 	const formRef = useRef(null);
 	const getOptionsList = useRef([]);
@@ -59,6 +64,63 @@ const AddModel = (props,ref) =>{
 		isShowModel(title){
 			setVisible(!visible);
 		  setAddChangeTitle(title);
+		},
+		modifyData(title,row){
+			setVisible(true);
+			setAddChangeTitle(title);
+      
+			//机构
+			let orgNolist = [];
+			if(row.actionType === "04"){
+				let listarr = getParents(getOptionsList, row.actionOrgNo);
+				listarr.push(row.actionOrgNo);
+				orgNolist = listarr;
+			}
+			formRef&&formRef.current.setFieldsValue({
+				adsId:row.adsId,
+				adsName: row.adsName, // 广告名称
+				adsType: row.adsType, // 广告方式
+  
+				imgPath:row.imgPath,// 图片存放路径
+				imgClickUrl: row.imgClickUrl, //图片url
+  
+				adsTitle: row.adsTitle, // 广告标题
+				adsContent: row.adsContent, //广告内容
+				btnText: row.btnText, // 按钮文字
+				btnClickUrl: row.btnClickUrl, // 按钮链接
+				actionType: row.actionType, //弹窗对象
+				actionOrgNo:orgNolist, // 机构号
+				actionOrgName:row.actionOrgName,// 机构名称
+				actionStoragePath:row.actionStoragePath,//弹窗对象列表文件存放路径
+				actionFrequency: row.actionFrequency, //弹窗频率
+				startDate: moment(row.startDate), //开始时间
+				endDate: moment(row.endDate), //结束时间
+				state: row.state, //状态
+			});
+			if(row.adsType === "01"){
+				setFileList({
+					fileList:[{
+						uid: "-1",
+						name: row.imgPath,
+						status: "done",
+						url: popupAdsDown(row.imgPath),
+						thumbUrl: popupAdsDown(row.imgPath),
+					}],
+				});
+			}
+			if(row.actionType==="02"||row.actionType==="03"){
+				setFileList2({
+					fileList2:[{
+						uid: "-1",
+						name: row.actionStoragePath,
+						status: "done",
+						url: popupAdsDown(row.actionStoragePath),
+						thumbUrl: popupAdsDown(row.actionStoragePath),
+					}],
+				});
+			}
+        
+			formRef.current.validateFields();
 		}
 	}));
 	useEffect(()=>{
@@ -113,65 +175,6 @@ const AddModel = (props,ref) =>{
 		setVisible(false);
 	};
   
-	// eslint-disable-next-line no-unused-vars
-	const modifyData = (title,row)=>{
-		setVisible(true);
-		setAddChangeTitle(title);
-  	
-		//机构
-		let orgNolist = [];
-		if(row.actionType === "04"){
-			let listarr = getParents(getOptionsList, row.actionOrgNo);
-			listarr.push(row.actionOrgNo);
-			orgNolist = listarr;
-		}
-		formRef&&formRef.current.setFieldsValue({
-			adsId:row.adsId,
-			adsName: row.adsName, // 广告名称
-			adsType: row.adsType, // 广告方式
-
-			imgPath:row.imgPath,// 图片存放路径
-			imgClickUrl: row.imgClickUrl, //图片url
-
-			adsTitle: row.adsTitle, // 广告标题
-			adsContent: row.adsContent, //广告内容
-			btnText: row.btnText, // 按钮文字
-			btnClickUrl: row.btnClickUrl, // 按钮链接
-			actionType: row.actionType, //弹窗对象
-			actionOrgNo:orgNolist, // 机构号
-			actionOrgName:row.actionOrgName,// 机构名称
-			actionStoragePath:row.actionStoragePath,//弹窗对象列表文件存放路径
-			actionFrequency: row.actionFrequency, //弹窗频率
-			startDate: moment(row.startDate), //开始时间
-			endDate: moment(row.endDate), //结束时间
-			state: row.state, //状态
-		});
-		if(row.adsType === "01"){
-			setFileList({
-				fileList:[{
-					uid: "-1",
-					name: row.imgPath,
-					status: "done",
-					url: popupAdsDown(row.imgPath),
-					thumbUrl: popupAdsDown(row.imgPath),
-				}],
-			});
-		}
-		if(row.actionType==="02"||row.actionType==="03"){
-			setFileList2({
-				fileList2:[{
-					uid: "-1",
-					name: row.actionStoragePath,
-					status: "done",
-					url: popupAdsDown(row.actionStoragePath),
-					thumbUrl: popupAdsDown(row.actionStoragePath),
-				}],
-			});
-		}
-      
-		console.log(formRef.current.getFieldsValue());
-		formRef.current.validateFields();
-	};
 
 	const onCreate = values => {
 		popupAdsAddFuc(values);
@@ -299,25 +302,7 @@ const AddModel = (props,ref) =>{
 				ref={formRef}
 				layout={layouts}
 				name="form_in_model"
-				initialValues={{
-					adsId:"",
-					adsName: "", // 广告名称
-					adsType: "", // 广告方式
-					imgPath:"",// 图片存放路径
-					imgClickUrl: "", //图片url
-					adsTitle: "", // 广告标题
-					adsContent: "", //广告内容
-					btnText: "", // 按钮文字
-					btnClickUrl: "", // 按钮链接
-					actionType: "", //弹窗对象
-					actionOrgNo:[], // 机构号
-					actionOrgName:"",// 机构名称
-					actionStoragePath:"",//弹窗对象列表文件存放路径
-					actionFrequency: "", //弹窗频率
-					startDate: "", //开始时间
-					endDate: "", //结束时间
-					state: "00" //状态
-				}}
+				initialValues={initValues}
 			>
 				<Form.Item name="adsName" label="广告名称" hasFeedback rules={[{
 					required: true,

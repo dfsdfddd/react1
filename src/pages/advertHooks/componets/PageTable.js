@@ -2,7 +2,7 @@ import React from "react";
 import { Table,Button } from "antd";
 
 import { popupAdsDown } from "../../../api/advertManage";
-const handlecolumns = (baseMap) =>{
+const handlecolumns = (baseMap,props) =>{
 	const {state:stateOption,adsType:adsTypeOption,actionType,actionFrequency} = baseMap;
 	return [
 		{
@@ -66,7 +66,7 @@ const handlecolumns = (baseMap) =>{
 			key: "action",
 			dataIndex: "action",
 			render: (text, record) => (
-				<Button size='small' type='primary' onClick={()=>this.props.handleClick(record,true)} style={{ marginRight: 16 }}>修改 {record.state}</Button>
+				<Button size='small' type='primary' onClick={()=>props.handleClick(record,true)} style={{ marginRight: 16 }}>修改 {record.state}</Button>
 			),
 		},
 	];
@@ -74,7 +74,7 @@ const handlecolumns = (baseMap) =>{
 
 const PageTable = (props) =>{
 	const {total,current,dataSource,baseMap,changePage} = props;
-	const columns = handlecolumns(baseMap);
+	const columns = handlecolumns(baseMap,props);
 	return (
 		<Table className="tableClass" bordered={true} dataSource={dataSource} columns={columns} rowKey={(record, index) => index}
 			pagination={{
