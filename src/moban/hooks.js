@@ -69,7 +69,7 @@ function App(){
 // （4）强制更新
 // 定义一个额外变量,让函数依赖这个额外变量，这个额外变量变化时会执行更新
 
-// react hooks 父子组件通信总结 https://www.cnblogs.com/shine1234/p/13223391.html 比较重要
+// react hooks 父子组件通信总结 https://www.cnblogs.com/shine1234/p/13223391.html 比较重要 https://blog.csdn.net/qq_39770065/article/details/110424964
 // react hooks 父子之间的通信  https://www.yuque.com/senkita/reviews/gbipsa
 
 

@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 class Demo extends Component {
     // 静态属性
     // static 属性
     // static 方法
     static defaultProps = {
-      name: 'stranger'
+    	name: "stranger"
     }
 
     // 构造方法
     constructor(props, context) {
-        super(props, context);
-        this.state = {
-            //定义state
-        };
+    	super(props, context);
+    	this.state = {
+    		//定义state
+    	};
     }
     getChildContext(){}
     // 生命周期相关
@@ -38,7 +38,7 @@ class Demo extends Component {
     renderNavigation(){}
     renderProfilePicture(){}
     render() {
-        return <div></div>;
+    	return <div></div>;
     }
 }
 
@@ -46,13 +46,13 @@ class Demo extends Component {
 
 // 校验props
 Demo.propTypes = {
-  name: PropTypes.string
-}
+	name: PropTypes.string
+};
 
 // 设置props的默认值
 Demo.defaultProps = {
-  bar: '',
-  children: null,
+	bar: "",
+	children: null,
 };
 
 export default Demo;
