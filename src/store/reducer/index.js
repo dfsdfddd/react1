@@ -1,8 +1,8 @@
-import {combineReducers} from 'redux';
-import toggle from './toggle';
+import {combineReducers} from "redux";
+import toggle from "./toggle";
 
 const index = combineReducers({
-  toggle:toggle
-})
+	toggle:toggle
+});
 
-export default index
+export default index;

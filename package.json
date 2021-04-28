@@ -1,6 +1,7 @@
 {
   "name": "react1",
   "version": "0.1.0",
+  "homepage": "/sysBox",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -19,18 +20,18 @@
     "react-scripts": "3.3.1"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "dev": "cross-env REACT_APP_MODE=dev react-app-rewired start",
+    "build": "cross-env REACT_APP_MODE=test react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "parserOptions": {
-		"ecmaFeatures": {
-			"jsx": true
-		},
-		"ecmaVersion": 2018,
-		"sourceType": "module"
-	},
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
   "eslintConfig": {
     "extends": "react-app",
     "plugins": [
@@ -72,6 +73,7 @@
   },
   "devDependencies": {
     "babel-plugin-import": "^1.13.0",
+    "cross-env": "^7.0.3",
     "eslint": "^6.6.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-html": "^6.1.1",

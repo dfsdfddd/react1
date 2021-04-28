@@ -14,20 +14,20 @@ import "./App.css";
 // redux
 import { Provider } from "react-redux";
 import store from "./store";
-import Page from './Page';
+import Page from "./Page";
 
 
-import { ConfigProvider } from 'antd';
-import zhCN from 'antd/es/locale/zh_CN';
+import { ConfigProvider } from "antd";
+import zhCN from "antd/es/locale/zh_CN";
 
 function App() {
-  return (
-    <Provider store={store}>
-      <ConfigProvider locale={zhCN}>
-        <Page/>
-      </ConfigProvider>
-{/* // 测试路由组件 */}
-      {/* <div className="App">
+	return (
+		<Provider store={store}>
+			<ConfigProvider locale={zhCN}>
+				<Page/>
+			</ConfigProvider>
+			{/* // 测试路由组件 */}
+			{/* <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
@@ -51,8 +51,8 @@ function App() {
           {<RouteConfigExample />}
         </div>
       </div> */}
-    </Provider>
-  );
+		</Provider>
+	);
 }
 
 export default App;

@@ -1,5 +1,5 @@
-import {onToggle} from './toggle';
+import {onToggle} from "./toggle";
 
 export default {
-  onToggle
-}
+	onToggle
+};

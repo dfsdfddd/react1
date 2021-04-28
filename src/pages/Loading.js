@@ -14,6 +14,8 @@ const Loading = (props) =>{
 	const [count,setCount] = useState({});
 	useEffect(()=>{
 		setTimeout(() => {
+
+			console.log("1111",ownRef);
 			setCount({a:1,b:2});
 		}, 2000);
 	},[]);

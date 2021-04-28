@@ -87,3 +87,7 @@ react create-react-app 创建eslint项目
  第二步可能不会用到 .eslintrc.js 而是直接在 package.json 里面的eslintConfig里面做配置
  也可以吧 .eslintrc.js 里面的内容放到 eslintConfig 里面
 
+
+https://blog.csdn.net/diaojw090/article/details/106674462/   生产部署
+
+https://www.jianshu.com/p/36efe1dc2f5e  create-react-app 的一些自定义配置

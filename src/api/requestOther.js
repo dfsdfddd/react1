@@ -2,10 +2,15 @@ import axios from "axios";
 import { message } from "antd";
 // import router from '../router'
 
-const baseUrl = "/api";
+const baseUrl = {
+	"dev":"/api",
+	"test":"/",
+	"build":"/",
+}[process.env.REACT_APP_MODE];
 const token = sessionStorage.getItem("theToken");
 console.log("token",token);
-
+console.log("baseUrl",baseUrl);
+console.log("showenv", process.env.REACT_APP_MODE);
 const instance = axios.create({
 	withCredentials:true,
 	crossdomain: true,
@@ -13,7 +18,7 @@ const instance = axios.create({
 	timeout: 50000, // 请求超时时间
 	headers:{
 		"Content-Type":"application/json",
-		"token":token || "dadba24e-67c9-4467-87a5-52861dc18e74"
+		"token":token || "5eb25ab9-132a-4ea6-a4dc-6c831140589a"
 	}
 });
 
