@@ -9,7 +9,6 @@ import { getProductList } from "../../module/product";
 import {useState,useEffect} from "react";
 
 
-
 //use
 // import useProductData from './components/ProductListHooks/useProductData'
 import AdminProductList from "./components/AdminProductList";
