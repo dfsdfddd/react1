@@ -17,7 +17,7 @@
     "react": "^16.12.0",
     "react-app-rewired": "^2.1.5",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.3.1"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "dev": "cross-env REACT_APP_MODE=dev react-app-rewired start",
